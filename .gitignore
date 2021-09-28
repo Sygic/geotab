@@ -1,2 +1,3 @@
 node_modules
 .vscode
+/geotab/sygic-geotab-utils/lib/*
