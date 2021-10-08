@@ -2,6 +2,14 @@
     display: none!important;
 }
 
+#sygic-tutorial.panel-button-heading {
+    border-bottom: none;
+}
+
+#sygic-app .panel__title {
+    white-space: initial;
+}
+
 /*
 
 //THIS IS COPIED FROM HERE: https://github.com/Geotab/sdk/blob/master/src/software/js-samples/css/geotab.css
