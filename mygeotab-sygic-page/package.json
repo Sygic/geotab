@@ -79,5 +79,7 @@
     "timeout": 10000,
     "reporter": "nyan"
   },
-  "dependencies": {}
+  "dependencies": {
+    "underscore": "^1.12.0"
+  }
 }
