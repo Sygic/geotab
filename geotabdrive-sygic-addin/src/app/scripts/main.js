@@ -138,6 +138,14 @@ geotab.addin.sygic = function (api, state) {
 
   let myDimensions = null;
 
+  function calculateCenter(arr) {
+    var x = arr.map(xy => xy[0]);
+    var y = arr.map(xy => xy[1]);
+    var cx = (Math.min(...x) + Math.max(...x)) / 2;
+    var cy = (Math.min(...y) + Math.max(...y)) / 2;
+    return [cx, cy];
+  }
+
   function populateDimensions(dimensions) {
     let summaryTemplate = _.template(dimensionsDataTemplate);
     let formTemplate = _.template(dimensionsFormTemplate);
@@ -337,8 +345,11 @@ geotab.addin.sygic = function (api, state) {
               td
             );
 
-            let lat = zone.points[0].y;
-            let lon = zone.points[0].x;
+            let pts = zone.points.map(p => [p.y, p.x]);
+            let center = calculateCenter(pts);
+
+            let lat = center[0];
+            let lon = center[1];
 
             a.setAttribute('href', '#');
             a.addEventListener('click', (event) => {
