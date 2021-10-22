@@ -9,3 +9,665 @@
 .sygic-vehicle-dimensions-fieldset {
   padding: 0 !important;
 }
+
+
+/* geotab */
+
+.geotabPageHeader {
+  width: 100%;
+  overflow: hidden;
+  color: #25477b;
+  border-bottom: 2px #5293c6 solid;
+  display: flex
+}
+
+.geotabPageName {
+  font-weight: normal;
+  margin: 0;
+  border-bottom: 3px #5293c6 solid;
+  padding: 11px 0;
+  font-size: 2.3em;
+  display: block;
+  float: left;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre;
+  flex-shrink: 1
+}
+
+.checkmateListBuilder {
+  overscroll-behavior: contain
+}
+
+.checkmateListBuilder .checkmateListBuilderRow {
+  background: #fefefe;
+  border: none;
+  min-height: 32px;
+  border-bottom: 1px #ddd solid;
+  border-left: 5px #c5dbec solid;
+  padding: 8px 15px;
+  margin-bottom: 1px;
+  margin-left: 0;
+  overflow: hidden;
+  display: block;
+  cursor: pointer;
+  color: #25477b;
+  fill: #25477b;
+  text-decoration: none
+}
+
+.checkmateListBuilder .g-row {
+  display: flex;
+  width: 100%;
+  padding: 3px 6px
+}
+
+.checkmateListBuilder .g-row .g-main.g-main_wider {
+  padding: 10px 4px
+}
+
+.checkmateListBuilder .g-row .g-main {
+  display: flex;
+  flex: 1 1 auto;
+  max-width: 100%;
+  justify-content: space-between;
+  overflow: hidden;
+  text-decoration: none;
+  padding: 7px 4px;
+  border: none;
+  background: none
+}
+
+.checkmateListBuilder .g-row .g-main-col {
+  display: flex;
+  flex-direction: column
+}
+
+.checkmateListBuilder .g-row .g-name {
+  display: flex;
+  width: 30%;
+  overflow: hidden;
+  max-width: 100%;
+  font-size: 1.2em;
+  align-items: center;
+  color: #25477b;
+  fill: #25477b
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal
+}
+
+.checkmateListBuilder .g-row .g-main .g-comment {
+  padding: 5px 0 0 0
+}
+
+.checkmateListBuilder .checkmateListBuilderRow .secondaryData {
+  color: #757575
+}
+
+.checkmateListBuilder .g-row .g-ctrl {
+  display: flex;
+  flex: 0 0 auto;
+  justify-content: flex-end;
+  align-items: center
+}
+
+.checkmateListBuilder .g-row .g-ctrl>.geotabButton,
+.checkmateListBuilder .g-row .g-ctrl__item {
+  margin-right: 3px;
+  float: right
+}
+
+.geotabButton {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 1px solid #c5dbec;
+  background-color: #e8f3fd;
+  color: #25477b;
+  fill: #25477b;
+  text-decoration: none;
+  line-height: 18px;
+  display: inline-block;
+  position: relative;
+  padding: 6px 11px;
+  margin: 0;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto
+}
+
+.geotabButton:hover,
+.geotabButton.geotabButtonHover,
+.geotabButton:focus {
+  border-color: #5293c6;
+  background: #d1e7fb;
+  color: #25477b;
+  fill: #25477b;
+  text-decoration: none
+}
+
+.geotabButton:active,
+.geotabButton.geotabButtonActive {
+  color: #fff;
+  fill: #fff;
+  border-color: #2c7ab1;
+  background: #2c7ab1;
+  -webkit-tap-highlight-color: transparent
+}
+
+.geotabButton.buttonDisabled,
+.geotabButton[disabled],
+.geotabButton[disabled] .geotabButtonIcons {
+  opacity: 0.35;
+  cursor: default
+}
+
+.geotabButton.buttonDisabled:hover,
+.geotabButton[disabled]:hover,
+.geotabButton[disabled] .geotabButtonIcons:hover,
+.geotabButton.buttonDisabled.geotabButtonHover,
+.geotabButton[disabled].geotabButtonHover,
+.geotabButton[disabled] .geotabButtonIcons.geotabButtonHover,
+.geotabButton.buttonDisabled:active,
+.geotabButton[disabled]:active,
+.geotabButton[disabled] .geotabButtonIcons:active {
+  border-color: #c5dbec;
+  background-color: #e8f3fd;
+  color: #25477b;
+  fill: #25477b
+}
+
+.geotabButton:focus {
+  outline: none
+}
+
+.geotabButton.geotabButtonLarge {
+  font-size: 1.2em;
+  padding: 0.5em 1em
+}
+
+.geotabButton.negativeButton.negativeButton {
+  background: #bd362f;
+  border-color: #ff7070;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.negativeButton.negativeButton:active {
+  background: #802822;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.negativeButton.negativeButton:hover,
+.geotabButton.negativeButton.negativeButton:focus {
+  background: #9b2f25;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.negativeButton.negativeButton.buttonDisabled,
+.geotabButton.negativeButton.negativeButton[disabled] {
+  background: #bd362f;
+  border-color: #ff7070;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.negativeButton.negativeButton.buttonDisabled:active,
+.geotabButton.negativeButton.negativeButton[disabled]:active,
+.geotabButton.negativeButton.negativeButton.buttonDisabled:hover,
+.geotabButton.negativeButton.negativeButton[disabled]:hover {
+  background: #bd362f;
+  border-color: #ff7070;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.positiveButton.positiveButton {
+  background: #3b863b;
+  border-color: #3b863b;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.positiveButton.positiveButton:active {
+  background: #408140;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.positiveButton.positiveButton:hover,
+.geotabButton.positiveButton.positiveButton:focus {
+  background: #449b44;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.positiveButton.positiveButton.buttonDisabled,
+.geotabButton.positiveButton.positiveButton[disabled] {
+  background: #3b863b;
+  border-color: #3b863b;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.positiveButton.positiveButton.buttonDisabled:active,
+.geotabButton.positiveButton.positiveButton[disabled]:active,
+.geotabButton.positiveButton.positiveButton.buttonDisabled:hover,
+.geotabButton.positiveButton.positiveButton[disabled]:hover {
+  background: #3b863b;
+  border-color: #3b863b;
+  color: #fff;
+  fill: #fff
+}
+
+.geotabButton.errorButton {
+  border-color: #ce838f;
+  background: #f2dede;
+  color: #ca0b0b;
+  fill: #ca0b0b
+}
+
+.geotabButton.errorButton:hover,
+.geotabButton.errorButton:focus {
+  border-color: #ce838f;
+  background: #ebcccc;
+  color: #ca0b0b;
+  fill: #ca0b0b
+}
+
+.geotabButton.errorButton:active {
+  color: #fff;
+  fill: #fff;
+  border-color: #ce838f;
+  background: #ce838f
+}
+
+.geotabButton.errorButton.buttonDisabled,
+.geotabButton.errorButton[disabled] {
+  border-color: #ce838f;
+  background: #f2dede;
+  color: #ca0b0b;
+  fill: #ca0b0b
+}
+
+.geotabButton.errorButton.buttonDisabled:active,
+.geotabButton.errorButton[disabled]:active,
+.geotabButton.errorButton.buttonDisabled:hover,
+.geotabButton.errorButton[disabled]:hover {
+  border-color: #ce838f;
+  background: #f2dede;
+  color: #ca0b0b;
+  fill: #ca0b0b
+}
+
+.geotabButton.geotabButton-empty,
+.geotabButton.responsive {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
+  padding: 0
+}
+
+.geotabButton.geotabButton-empty:after,
+.geotabButton.responsive:after {
+  content: "";
+  min-height: inherit;
+  font-size: 0
+}
+
+.geotabButton.geotabButton-empty>.icon,
+.geotabButton.responsive>.icon {
+  padding: 0
+}
+
+.geotabButton.geotabButton-empty>.geotabButtonIcons,
+.geotabButton.responsive>.geotabButtonIcons {
+  top: 0.7em;
+  right: 50%;
+  transform: translateX(50%)
+}
+
+.geotabButton.geotabButton-empty>.customIcon,
+.geotabButton.responsive>.customIcon {
+  top: 50%;
+  right: 50%;
+  transform: translateX(50%) translateY(-50%);
+  margin: 0
+}
+
+.geotabButton.geotabButton-empty.geotabButton-multiIcons {
+  width: auto;
+  padding: 0 10px
+}
+
+.geotabButton.responsive {
+  padding: 0 10px;
+  width: auto
+}
+
+.geotabButton.waitingElement {
+  opacity: 0.5
+}
+
+.geotabButton.waitingElement:after {
+  width: 100%;
+  background-size: auto
+}
+
+.geotabButton>.geotabButton-title+.geotabButton-svgIcon,
+.geotabButton>.geotabButton-svgIcon+.geotabButton-title {
+  margin-left: 5px
+}
+
+.geotabButton.geotabButton-multiIcons>.geotabButton-svgIcon+.geotabButton-svgIcon {
+  margin-left: 7px
+}
+
+.geotabButton.rightGeotabIcon {
+  padding-right: 2.1em
+}
+
+.geotabButton.rightGeotabIcon>.geotabButtonIcons {
+  float: right;
+  right: 0.7em;
+  top: 50%;
+  margin-top: -5.5px
+}
+
+.geotabButton.leftGeotabIcon {
+  padding-left: 2.1em
+}
+
+.geotabButton.leftGeotabIcon>.geotabButtonIcons {
+  float: left;
+  left: 0.7em;
+  top: 50%;
+  margin-top: -5.5px
+}
+
+.geotabButton.leftGeotabIcon.rightGeotabIcon>.geotabButtonIcons:first-child {
+  float: left;
+  left: 0.7em;
+  right: auto
+}
+
+.geotabButton.leftGeotabIcon.rightGeotabIcon>.geotabButtonIcons:last-child {
+  float: right;
+  right: 0.7em;
+  left: auto
+}
+
+.geotabButton .icon {
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 0 5px 0 -4px
+}
+
+.geotabButton .icon.bigger {
+  width: 22px;
+  height: 22px;
+  top: 5px;
+  left: 8px
+}
+
+.geotabButton .icon.textlessIcon {
+  padding-right: 0;
+  margin-right: -3px;
+  margin-left: 0
+}
+
+.geotabButton .geotabButtonIcons {
+  padding-right: 0
+}
+
+.checkmateFormPage fieldset,
+.geotabFieldset {
+  width: 80%;
+  max-width: 800px;
+  min-width: 0;
+  padding: 18px 25px;
+  background-color: #fefefe;
+  color: #222;
+  border: none;
+  margin: 5px 0 0 0
+}
+
+.checkmateFormPage fieldset.inset,
+.geotabFieldset.inset {
+  padding: 10px;
+  border-radius: 5px;
+  border-color: #ddd
+}
+
+.checkmateFormPage fieldset.emptyFieldset,
+.geotabFieldset.emptyFieldset {
+  padding: 0;
+  margin: 0
+}
+
+.checkmateFormPage fieldset>legend,
+.geotabFieldset>legend,
+.checkmateFormPage fieldset .partLegend,
+.geotabFieldset .partLegend {
+  font-weight: 700;
+  color: #25477b;
+  fill: #25477b;
+  text-transform: uppercase
+}
+
+.checkmateFormPage fieldset fieldset>legend,
+.geotabFieldset fieldset>legend {
+  padding: 0.5em 2%;
+  color: #222;
+  text-transform: none
+}
+
+.checkmateFormPage fieldset fieldset>.checkmateField,
+.geotabFieldset fieldset>.checkmateField {
+  margin: 2px 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em
+}
+
+.checkmateFormPage fieldset .noSpinner::-webkit-outer-spin-button,
+.geotabFieldset .noSpinner::-webkit-outer-spin-button,
+.checkmateFormPage fieldset .noSpinner::-webkit-inner-spin-button,
+.geotabFieldset .noSpinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0
+}
+
+.checkmateFormPage fieldset .info,
+.geotabFieldset .info {
+  font-size: 1.2em;
+  color: #757575;
+  margin: 0 10px 10px 10px
+}
+
+.checkmateField,
+.geotabField {
+  border-radius: 0.4em;
+  margin: 4px 0;
+  padding: 0.5em 2%;
+  float: left;
+  width: 94%
+}
+
+.checkmateField:hover:not(.alert-error),
+.geotabField:hover:not(.alert-error) {
+  background-color: #f4f4f4
+}
+
+.checkmateField .helpText,
+.geotabField .helpText {
+  margin: 0;
+  padding: 0
+}
+
+.checkmateField p,
+.geotabField p,
+.checkmateField .alert,
+.geotabField .alert {
+  margin: 0
+}
+
+.checkmateField>*:first-child:not(.fieldWithoutLabel),
+.geotabField>*:first-child:not(.fieldWithoutLabel) {
+  display: inline-block;
+  max-width: 25%;
+  margin-bottom: 2px;
+  color: #757575;
+  fill: #757575;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto
+}
+
+.checkmateField:not(.notEditable)>*:first-child:not(.fieldWithoutLabel),
+.geotabField:not(.notEditable)>*:first-child:not(.fieldWithoutLabel) {
+  margin-top: 3px
+}
+
+.checkmateField>*:first-child+*,
+.geotabField>*:first-child+*,
+.checkmateField>.elementWithoutLabel,
+.geotabField>.elementWithoutLabel,
+.checkmateField>.fieldWithoutLabel:not(.singleField),
+.geotabField>.fieldWithoutLabel:not(.singleField) {
+  float: right;
+  width: 69%
+}
+
+.checkmateField .horizontalButtonSet,
+.geotabField .horizontalButtonSet {
+  width: 69%
+}
+
+.checkmateField .checkmateComplexField .label,
+.geotabField .checkmateComplexField .label {
+  margin: 4px 0;
+  color: #757575;
+  fill: #757575
+}
+
+.checkmateField .checkmateComplexField .horizontalButtonSet,
+.geotabField .checkmateComplexField .horizontalButtonSet {
+  width: 100%
+}
+
+@media only screen and (max-width:480px) {
+  .checkmateField>*:first-child+*,
+  .geotabField>*:first-child+* {
+    width: 56%
+  }
+  .checkmateField .fullWidth,
+  .geotabField .fullWidth,
+  .checkmateField.fullWidth>*:first-child,
+  .geotabField.fullWidth>*:first-child,
+  .checkmateField .fullWidth>*:first-child,
+  .geotabField .fullWidth>*:first-child {
+    width: 100%
+  }
+  .checkmateField.notEditable>*:first-child+*,
+  .geotabField.notEditable>*:first-child+* {
+    width: auto;
+    padding-left: 5px
+  }
+  .checkmateField:not(.notFlexible),
+  .geotabField:not(.notFlexible) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center
+  }
+  .checkmateField:not(.notFlexible)>*:first-child,
+  .geotabField:not(.notFlexible)>*:first-child {
+    min-width: 44%;
+    max-width: none;
+    width: auto;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto
+  }
+  .checkmateField:not(.notFlexible) .checkmateFormEditField,
+  .geotabField:not(.notFlexible) .checkmateFormEditField {
+    flex: 1 1 56%;
+    width: 100%;
+    float: none
+  }
+  .checkmateField:not(.notFlexible) .flexibleWrapper,
+  .geotabField:not(.notFlexible) .flexibleWrapper {
+    flex: 1 1 56%
+  }
+  .checkmateField:not(.notFlexible) .flexible,
+  .geotabField:not(.notFlexible) .flexible {
+    display: flex;
+    flex-wrap: wrap;
+    width: 56%
+  }
+  .checkmateField:not(.notFlexible) .flexible .checkmateFormEditField+*,
+  .geotabField:not(.notFlexible) .flexible .checkmateFormEditField+* {
+    padding: 0.3em
+  }
+  .checkmateField:not(.notFlexible) .flexible.fullWidth,
+  .geotabField:not(.notFlexible) .flexible.fullWidth {
+    width: 100%
+  }
+  .checkmateField:not(.notFlexible)>textarea.checkmateFormEditField,
+  .geotabField:not(.notFlexible)>textarea.checkmateFormEditField {
+    flex: initial
+  }
+  .checkmateField.notFlexible>*:first-child,
+  .geotabField.notFlexible>*:first-child {
+    max-width: none
+  }
+  .checkmateField.notFlexible>*:first-child+*:not(.horizontalButtonSet):not(.horizontalButtonSetWrapper):not(.noWidth),
+  .geotabField.notFlexible>*:first-child+*:not(.horizontalButtonSet):not(.horizontalButtonSetWrapper):not(.noWidth) {
+    width: 100%
+  }
+  .checkmateField .noWidth,
+  .geotabField .noWidth {
+    width: auto;
+    float: right
+  }
+  .checkmateField .horizontalButtonSet,
+  .geotabField .horizontalButtonSet,
+  .checkmateField .horizontalButtonSetWrapper,
+  .geotabField .horizontalButtonSetWrapper {
+    width: auto;
+    float: right
+  }
+  .checkmateField .horizontalButtonSet.fullWidth,
+  .geotabField .horizontalButtonSet.fullWidth,
+  .checkmateField .horizontalButtonSetWrapper.fullWidth,
+  .geotabField .horizontalButtonSetWrapper.fullWidth {
+    width: 100%
+  }
+  .checkmateField .horizontalButtonSet.flexible,
+  .geotabField .horizontalButtonSet.flexible {
+    width: 100%
+  }
+}
