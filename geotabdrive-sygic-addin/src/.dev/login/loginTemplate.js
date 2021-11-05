@@ -4,7 +4,7 @@ import xIcon from '../images/close-round.svg';
 import addinIcon from '../../app/images/icon.svg';
 let loginExample = `
 
-    <link rel="stylesheet" href="https://my.geotab.com/drive/app/css/geotabdrive.less">
+    <link rel="stylesheet" href="https://my1291.geotab.com/sygic_test/drive/app/css/app.less">
 
 <style>
     body {
