@@ -4,7 +4,8 @@ import xIcon from '../images/close-round.svg';
 import addinIcon from '../../app/images/icon.svg';
 let loginExample = `
 
-    <link rel="stylesheet" href="https://my112.geotab.com/geotab/checkmate/app.less?skin=my_geotab">
+<!--    <link rel="stylesheet" href="https://my112.geotab.com/geotab/checkmate/app.less?skin=my_geotab">-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sygic/geotab@1.0.0-beta4/mygeotab-sygic-page/src/.dev/styles/app.css">
 
 <style>
     body {
