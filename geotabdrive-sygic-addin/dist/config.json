@@ -1,11 +1,11 @@
 {
   "name": "Sygic Professional Navigation",
   "supportEmail": "os-team@sygic.com",
-  "version": "1.0.0-beta2",
+  "version": "1.0.0-beta9",
   "solutionId": "sygicSygic",
   "items": [
     {
-      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.0.0-beta2/geotabdrive-sygic-addin/dist/sygic.html",
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.0.0-beta9/geotabdrive-sygic-addin/dist/sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
         "en": "Sygic Truck Settings",
@@ -15,7 +15,7 @@
         "it": "Sygic Truck Impostazioni",
         "pl": "Ustawienia Sygic Truck"
       },
-      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.0.0-beta2/geotabdrive-sygic-addin/dist/images/icon.svg"
+      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.0.0-beta9/geotabdrive-sygic-addin/dist/images/icon.svg"
     }
   ],
   "isSigned": "false"

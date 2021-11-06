@@ -136,8 +136,6 @@ geotab.addin.sygic = function (api, state) {
   // the root container
   let elAddin = document.getElementById('sygic-app');
 
-  let myDimensions = null;
-
   function calculateCenter(arr) {
     var x = arr.map(xy => xy[0]);
     var y = arr.map(xy => xy[1]);
@@ -416,39 +414,43 @@ geotab.addin.sygic = function (api, state) {
         freshState.translate(elAddin || '');
       }
       await handleEditFunction();
-
+      
       document
         .getElementById('sygic-edit-dimensions')
         .addEventListener('click', (event) => {
           event.preventDefault();
           toggleDimensionsBox();
         });
-
+      
       document
         .getElementById('sygic-save-dimensions')
         .addEventListener('click', async (event) => {
           event.preventDefault();
 
-          let storage = new DimensionsStorage(geotabApi);
-          let dimensionsInputs = Dimensions.getInputValues(elAddin);
-          if (myDimensions) {
-            try {
-              await storage.setDimensionsAsync(
-                dimensionsInputs,
-                myDimensions.id,
-                freshState.device.id
+          if (freshState.device && freshState.device.id !== 'NoDeviceId'){
+            let storage = new DimensionsStorage(geotabApi);
+            let dimensionsInputs = Dimensions.getInputValues(elAddin);
+            let myDimensions = await storage.getDimensionsAsync(freshState.device.id);
+
+            if (myDimensions) {
+              try {
+                await storage.setDimensionsAsync(
+                    dimensionsInputs,
+                    myDimensions.id,
+                    freshState.device.id
+                );
+              } catch (e) {
+                //don't know what is going on there, but there is an error when updating
+              }
+            } else {
+              await storage.addDimensionsAsync(
+                  dimensionsInputs,
+                  freshState.device.id
               );
-            } catch (e) {
-              //don't know what is going on there, but there is an error when updating
             }
-          } else {
-            await storage.addDimensionsAsync(
-              dimensionsInputs,
-              freshState.device.id
-            );
+            await loadDimensions(freshState.device);
+            toggleDimensionsBox();
           }
-          myDimensions = await loadDimensions(freshState.device);
-          toggleDimensionsBox();
         });
 
       // MUST call initializeCallback when done any setup
@@ -469,7 +471,27 @@ geotab.addin.sygic = function (api, state) {
     focus: async function (freshApi, freshState) {
       let device = await loadDevice(freshState.device.id);
       await loadTrips(device);
-      myDimensions = await loadDimensions(device);
+      let dimensions = await loadDimensions(device);
+      
+      if (window.DEBUG){
+        window.sygic = {
+          freshState, dimensions
+        }
+      }
+
+      // let storage = new DimensionsStorage(geotabApi);
+      // let myDimensions = await storage.getAllDimensionsAsync();
+      // console.log(myDimensions)
+      // for (let i = 0; i < myDimensions.length; i++) {
+      //   let dim = myDimensions[i];
+      //   await geotabApi.callAsync('Remove', {
+      //     typeName: 'AddInData',
+      //     entity: {
+      //       addInId: 'ajk3ZmUzNmQtYjNlYS0yMGI',
+      //       id: dim.id,
+      //     }
+      //   })
+      // }
 
       //show main content
       elAddin.className = elAddin.className.replace('hidden', '').trim();
