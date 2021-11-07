@@ -219,6 +219,13 @@ geotab.addin.sygic = function (api, state) {
     let location = encodeURI(uri);
     return location;
   }
+  
+  function resetView(){
+    elAddin.querySelector('#sygic-vehicle').textContent = '-';
+    show(document.getElementById('sygic-dimensions-no-vehicle'))
+    hide(document.getElementById('sygic-dimensions-summary'));
+    hide(document.getElementById('sygic-edit-dimensions'));
+  }
 
   async function loadDevice(deviceId) {
     if (deviceId !== noDeviceId){
@@ -427,6 +434,18 @@ geotab.addin.sygic = function (api, state) {
     await loadDimensions(deviceId);
     toggleDimensionsBox();
   }
+  
+  function show(el) {
+    if (el.classList.contains('hidden')){
+      el.classList.toggle('hidden');
+    }
+  }
+  
+  function hide(el) {
+    if (!el.classList.contains('hidden')){
+      el.classList.toggle('hidden');
+    }
+  }
 
   return {
     /**
@@ -485,6 +504,8 @@ geotab.addin.sygic = function (api, state) {
         console.log('focus', arguments);
       }
       
+      resetView();
+      
       const deviceId = freshState.device.id;
 
       if (window.DEBUG){
@@ -506,18 +527,10 @@ geotab.addin.sygic = function (api, state) {
         if (window.DEBUG){
           window.sygic.dimensions = dimensions;
         }
-
-        document
-            .getElementById('sygic-dimensions-no-vehicle')
-            .classList.toggle('hidden');
-
-        document
-            .getElementById('sygic-dimensions-summary')
-            .classList.toggle('hidden');
-
-        document
-            .getElementById('sygic-edit-dimensions')
-            .classList.toggle('hidden');
+        
+        hide(document.getElementById('sygic-dimensions-no-vehicle'))
+        show(document.getElementById('sygic-dimensions-summary'));
+        show(document.getElementById('sygic-edit-dimensions'));
       }
 
       // let storage = new DimensionsStorage(geotabApi);
