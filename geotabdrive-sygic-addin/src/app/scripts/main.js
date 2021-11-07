@@ -11,6 +11,8 @@ import {
 geotab.addin.sygic = function (api, state) {
   'use strict';
 
+  const noDeviceId = 'NoDeviceId';
+  
   let geotabApi = ApiWrapper(api);
 
   (function () {
@@ -218,15 +220,18 @@ geotab.addin.sygic = function (api, state) {
   }
 
   async function loadDevice(deviceId) {
-    let devices = await geotabApi.callAsync('Get', {
-      typeName: 'Device',
-      search: {
-        id: deviceId,
-      },
-    });
-    let device = devices[0];
-    elAddin.querySelector('#sygic-vehicle').textContent = device.name;
-    return device;
+    if (deviceId !== noDeviceId){
+      let devices = await geotabApi.callAsync('Get', {
+        typeName: 'Device',
+        search: {
+          id: deviceId,
+        },
+      });
+      
+      let device = devices[0];
+      elAddin.querySelector('#sygic-vehicle').textContent = device.name;
+      return device;
+    } 
   }
 
   function formatStopDate(stopDateString) {
@@ -397,6 +402,33 @@ geotab.addin.sygic = function (api, state) {
     }
   }
 
+  async function saveCallback(event) {
+    event.preventDefault();
+
+    let storage = new DimensionsStorage(geotabApi);
+    let dimensionsInputs = Dimensions.getInputValues(elAddin);
+    let myDimensions = await storage.getDimensionsAsync(state.device.id);
+
+    if (myDimensions) {
+      try {
+        await storage.setDimensionsAsync(
+            dimensionsInputs,
+            myDimensions.id,
+            state.device.id
+        );
+      } catch (e) {
+        //don't know what is going on there, but there is an error when updating
+      }
+    } else {
+      await storage.addDimensionsAsync(
+          dimensionsInputs,
+          state.device.id
+      );
+    }
+    await loadDimensions(state.device);
+    toggleDimensionsBox();
+  }
+
   return {
     /**
      * initialize() is called only once when the Add-In is first loaded. Use this function to initialize the
@@ -421,37 +453,6 @@ geotab.addin.sygic = function (api, state) {
           event.preventDefault();
           toggleDimensionsBox();
         });
-      
-      document
-        .getElementById('sygic-save-dimensions')
-        .addEventListener('click', async (event) => {
-          event.preventDefault();
-
-          if (freshState.device && freshState.device.id !== 'NoDeviceId'){
-            let storage = new DimensionsStorage(geotabApi);
-            let dimensionsInputs = Dimensions.getInputValues(elAddin);
-            let myDimensions = await storage.getDimensionsAsync(freshState.device.id);
-
-            if (myDimensions) {
-              try {
-                await storage.setDimensionsAsync(
-                    dimensionsInputs,
-                    myDimensions.id,
-                    freshState.device.id
-                );
-              } catch (e) {
-                //don't know what is going on there, but there is an error when updating
-              }
-            } else {
-              await storage.addDimensionsAsync(
-                  dimensionsInputs,
-                  freshState.device.id
-              );
-            }
-            await loadDimensions(freshState.device);
-            toggleDimensionsBox();
-          }
-        });
 
       // MUST call initializeCallback when done any setup
       initializeCallback();
@@ -469,14 +470,44 @@ geotab.addin.sygic = function (api, state) {
      * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
      */
     focus: async function (freshApi, freshState) {
-      let device = await loadDevice(freshState.device.id);
-      await loadTrips(device);
-      let dimensions = await loadDimensions(device);
       
+      function addSaveEventListener() {
+        let element = document.getElementById('sygic-save-dimensions');
+        element.removeEventListener('click', saveCallback);
+        element.addEventListener('click', saveCallback)
+      }
+
       if (window.DEBUG){
         window.sygic = {
-          freshState, dimensions
+          freshState,
+          DimensionsStorage,
+          geotabApi
         }
+      }
+
+      addSaveEventListener();
+
+      //hide editing functionality if no device is selected
+      if (freshState.device && freshState.device.id !== noDeviceId){
+        let device = await loadDevice(freshState.device.id);
+        await loadTrips(device);
+        let dimensions = await loadDimensions(device);
+
+        if (window.DEBUG){
+          window.sygic.dimensions = dimensions;
+        }
+
+        document
+            .getElementById('sygic-dimensions-no-vehicle')
+            .classList.toggle('hidden');
+
+        document
+            .getElementById('sygic-dimensions-summary')
+            .classList.toggle('hidden');
+
+        document
+            .getElementById('sygic-edit-dimensions')
+            .classList.toggle('hidden');
       }
 
       // let storage = new DimensionsStorage(geotabApi);
@@ -484,13 +515,15 @@ geotab.addin.sygic = function (api, state) {
       // console.log(myDimensions)
       // for (let i = 0; i < myDimensions.length; i++) {
       //   let dim = myDimensions[i];
-      //   await geotabApi.callAsync('Remove', {
-      //     typeName: 'AddInData',
-      //     entity: {
-      //       addInId: 'ajk3ZmUzNmQtYjNlYS0yMGI',
-      //       id: dim.id,
-      //     }
-      //   })
+      //   if (dim.details.vehicle_id === noDeviceId){
+      //     await geotabApi.callAsync('Remove', {
+      //       typeName: 'AddInData',
+      //       entity: {
+      //         addInId: 'ajk3ZmUzNmQtYjNlYS0yMGI',
+      //         id: dim.id,
+      //       }
+      //     })
+      //   }
       // }
 
       //show main content

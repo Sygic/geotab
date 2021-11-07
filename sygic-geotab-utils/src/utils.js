@@ -119,21 +119,24 @@ export class User {
 export function ApiWrapper(api) {
   // make use of async/await instead of callbacks
   return {
-    callAsync: (method, parameters) =>
-      new Promise((resolve, reject) => {
+    callAsync: (method, parameters) => {
+      return new Promise((resolve, reject) => {
         api.call(
-          method,
-          parameters,
-          (result) => resolve(result),
-          (err) => reject(err)
+            method,
+            parameters,
+            (result) => resolve(result),
+            (err) => reject(err)
         );
-      }),
+      })
+    },
     getSessionAsync: () =>
-      new Promise((resolve, reject) => {
+    {
+      return new Promise((resolve, reject) => {
         api.getSession((session) => {
           resolve(session);
         });
-      }),
+      })
+    },
   };
 }
 
