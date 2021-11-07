@@ -12,6 +12,7 @@ geotab.addin.sygic = function (api, state) {
   'use strict';
 
   const noDeviceId = 'NoDeviceId';
+  let addonDeviceId = undefined;
   
   let geotabApi = ApiWrapper(api);
 
@@ -369,9 +370,9 @@ geotab.addin.sygic = function (api, state) {
     });
   }
 
-  async function loadDimensions(device) {
+  async function loadDimensions(deviceId) {
     let storage = new DimensionsStorage(geotabApi);
-    let myDimensions = await storage.getDimensionsAsync(device.id);
+    let myDimensions = await storage.getDimensionsAsync(deviceId);
     if (!myDimensions) {
       populateDimensions(Dimensions.getEmpty());
     } else {
@@ -402,19 +403,17 @@ geotab.addin.sygic = function (api, state) {
     }
   }
 
-  async function saveCallback(event) {
-    event.preventDefault();
-
+  async function saveDinemsions(deviceId) {
     let storage = new DimensionsStorage(geotabApi);
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
-    let myDimensions = await storage.getDimensionsAsync(state.device.id);
+    let myDimensions = await storage.getDimensionsAsync(deviceId);
 
     if (myDimensions) {
       try {
         await storage.setDimensionsAsync(
             dimensionsInputs,
             myDimensions.id,
-            state.device.id
+            deviceId
         );
       } catch (e) {
         //don't know what is going on there, but there is an error when updating
@@ -422,10 +421,10 @@ geotab.addin.sygic = function (api, state) {
     } else {
       await storage.addDimensionsAsync(
           dimensionsInputs,
-          state.device.id
+          deviceId
       );
     }
-    await loadDimensions(state.device);
+    await loadDimensions(deviceId);
     toggleDimensionsBox();
   }
 
@@ -446,6 +445,10 @@ geotab.addin.sygic = function (api, state) {
         freshState.translate(elAddin || '');
       }
       await handleEditFunction();
+
+      if (window.DEBUG){
+        console.log('initialize', arguments);
+      }
       
       document
         .getElementById('sygic-edit-dimensions')
@@ -453,6 +456,13 @@ geotab.addin.sygic = function (api, state) {
           event.preventDefault();
           toggleDimensionsBox();
         });
+
+      document
+          .getElementById('sygic-save-dimensions')
+          .addEventListener('click', function(event){
+            event.preventDefault();
+            saveDinemsions(addonDeviceId);
+          });
 
       // MUST call initializeCallback when done any setup
       initializeCallback();
@@ -471,11 +481,11 @@ geotab.addin.sygic = function (api, state) {
      */
     focus: async function (freshApi, freshState) {
       
-      function addSaveEventListener() {
-        let element = document.getElementById('sygic-save-dimensions');
-        element.removeEventListener('click', saveCallback);
-        element.addEventListener('click', saveCallback)
+      if (window.DEBUG){
+        console.log('focus', arguments);
       }
+      
+      const deviceId = freshState.device.id;
 
       if (window.DEBUG){
         window.sygic = {
@@ -484,14 +494,14 @@ geotab.addin.sygic = function (api, state) {
           geotabApi
         }
       }
-
-      addSaveEventListener();
+      
+      addonDeviceId = deviceId;
 
       //hide editing functionality if no device is selected
-      if (freshState.device && freshState.device.id !== noDeviceId){
-        let device = await loadDevice(freshState.device.id);
+      if (deviceId !== noDeviceId){
+        let device = await loadDevice(deviceId);
         await loadTrips(device);
-        let dimensions = await loadDimensions(device);
+        let dimensions = await loadDimensions(deviceId);
 
         if (window.DEBUG){
           window.sygic.dimensions = dimensions;
@@ -541,6 +551,10 @@ geotab.addin.sygic = function (api, state) {
     blur: function () {
       // hide main content
       elAddin.className += ' hidden';
+
+      if (window.DEBUG){
+        console.log('blur', arguments);
+      }
     },
   };
 };
