@@ -24,10 +24,10 @@ geotab.addin.sygic = function (api, state) {
         freshState.translate(elAddin || '');
       }
 
-      if (window.DEBUG){
+      if (window.DEBUG) {
         console.log('initialize', arguments);
       }
-      
+
       // MUST call initializeCallback when done any setup
       initializeCallback();
     },
@@ -44,22 +44,20 @@ geotab.addin.sygic = function (api, state) {
      * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
      */
     focus: async function (freshApi, freshState) {
-      
-      if (window.DEBUG){
+
+      if (window.DEBUG) {
         console.log('focus', arguments);
       }
-      
-      if (window.DEBUG){
+
+      if (window.DEBUG) {
         window.sygic = {
           freshState,
-          DimensionsStorage,
           geotabApi
         }
       }
 
-            // window.open('com.sygic.aura://', '_system');
-      window.open('https://www.google.com', '_system');
-      
+      window.open('com.sygic.aura://', '_system');
+
       //show main content
       elAddin.className = elAddin.className.replace('hidden', '').trim();
     },
@@ -76,7 +74,7 @@ geotab.addin.sygic = function (api, state) {
       // hide main content
       elAddin.className += ' hidden';
 
-      if (window.DEBUG){
+      if (window.DEBUG) {
         console.log('blur', arguments);
       }
     },
