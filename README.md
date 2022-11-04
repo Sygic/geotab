@@ -9,13 +9,12 @@ npm install
 npm run serve
 ```
 # Deployment
-1. To increase version, go to respective files and update _version_ ([geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json) or [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json)). It will create a single [config.json](config.json) for both addons.
-2. To build production version run following command in root folder. It will run respective build scripts for geotabdrive and mygeotab page. 
-3. Don't forget to [create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _v1.0.1_).
-
+1. To increase version, go to respective files and update _version_ ([geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json)). It will create a single [config.json](config.json) for both addons.
+2. To build production version run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page. 
 ```
 npm run build
 ```
+3. Don't forget to [create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _v1.0.1_).
 
 To ensure proper sygic-geotab-utils module inclusion in both projects you need to:
 
@@ -60,5 +59,12 @@ To install the addin in Geotab Drive APP use this [config.json](geotabdrive-sygi
 To view vehicles in the list a user must have **"List devices"** (securityIdentifier: DeviceList) and **"View Add-in data"** (securityIdentifier: ViewAddInData) feature access in his security clearance.
 
 To modify vehicle dimensions a user must have **"Administer devices"** (securityIdentifier: DeviceAdmin) and **Manage Add-in data** (securityIdentifier: ManageAddInData) feature access in his security clearance.
+
+## Geotab login credentials
+1. You need to have an account at the testing server https://my1291.geotab.com/
+2. Login with your username + password and use sygic_test DB when prompted.
+
+## Geotab documentation reference
+https://geotab.github.io/sdk/software/guides/developing-addins/
 
 Contact: [os-team@sygic.com](mailto:os-team@sygic.com)

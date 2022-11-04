@@ -1,0 +1,28 @@
+{
+  "name": "Sygic Professional Navigation",
+  "supportEmail": "os-team@sygic.com",
+  "version": "__VERSION__",
+  "solutionId": "sygicSygic",
+  "items": [
+    {
+      "url": "sygic.html",
+      "path": "DriveAppLink/",
+      "menuName": {
+        "en": "Start Sygic Truck",
+        "de": "Sygic Truck Starten",
+        "es": "Iniciar Sygic Truck",
+        "fr": "Démarrer Sygic Truck",
+        "it": "Avviare Sygic Truck",
+        "pl": "Uruchom Sygic Truck"
+      },
+      "icon": "images/icon.svg"
+    }
+  ],
+  "isSigned": "false",
+  "dev": {
+    "root": "sygic",
+    "dist": {
+      "host": "https://cdn.jsdelivr.net/gh/sygic/geotab@__VERSION__/geotabdrive-start-sygic-addin/dist/"
+    }
+  }
+}
