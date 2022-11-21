@@ -9,7 +9,9 @@ npm install
 npm run serve
 ```
 # Deployment
-1. To increase version, go to respective files and update _version_ ([geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json)). It will create a single [config.json](config.json) for both addons. Update version in [config.json](config.json) as well (best would be to keep everything - all addons - in sync)
+1. To increase version, go to respective files and update _version_ ([geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json)). It will create a single [config.json](config.json) for both addons. Update version in [config.json](config.json) as well (best would be to keep everything - all addons - in sync).
+
+[geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json) addon has to be added separately (registration of two DriveAppLink/ addons doesn't go well in Geotab). Just use [geotabdrive-start-sygic-addin/dist/config.json](geotabdrive-start-sygic-addin/dist/config.json) for addon registration.
 2. To build production version run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page. 
 ```
 npm run build

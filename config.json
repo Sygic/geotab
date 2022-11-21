@@ -29,19 +29,6 @@
         "pl": "Ustawienia Sygic Truck"
       },
       "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.2-rc/geotabdrive-sygic-addin/dist/images/icon.svg"
-    },
-    {
-      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.2-rc/geotabdrive-start-sygic-addin/dist/start-sygic.html",
-      "path": "DriveAppLink/",
-      "menuName": {
-        "en": "Start Sygic Truck",
-        "de": "Sygic Truck Starten",
-        "es": "Iniciar Sygic Truck",
-        "fr": "Démarrer Sygic Truck",
-        "it": "Avviare Sygic Truck",
-        "pl": "Uruchom Sygic Truck"
-      },
-      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.2-rc/geotabdrive-start-sygic-addin/dist/images/icon.svg"
     }
   ],
   "isSigned": "false"
