@@ -67,6 +67,6 @@ module.exports = merge(common, {
         contentBase: path.join(__dirname),
         compress: true,
         port: 9002,
-        index: 'sygic.html'
+        index: 'start-sygic.html'
     }
 });

@@ -57,7 +57,7 @@ module.exports = merge(common, {
                     'css-loader',
                     {
                         loader: './src/.dev/loaders/css-sandbox/css-sandbox.js',
-                        options: { prefix: '#sygic-app' }
+                        options: { prefix: '#start-sygic-app' }
                     }
                 ]
             },

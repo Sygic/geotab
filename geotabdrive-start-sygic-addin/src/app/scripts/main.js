@@ -5,7 +5,7 @@ geotab.addin.sygic = function (api, state) {
   'use strict';
 
   // the root container
-  let elAddin = document.getElementById('sygic-app');
+  let elAddin = document.getElementById('start-sygic-app');
 
   return {
     /**
@@ -44,7 +44,6 @@ geotab.addin.sygic = function (api, state) {
      * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
      */
     focus: async function (freshApi, freshState) {
-
       if (window.DEBUG) {
         console.log('focus', arguments);
       }

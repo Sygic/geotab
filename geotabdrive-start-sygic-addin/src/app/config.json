@@ -5,7 +5,7 @@
   "solutionId": "sygicSygic",
   "items": [
     {
-      "url": "sygic.html",
+      "url": "start-sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
         "en": "Start Sygic Truck",
@@ -20,7 +20,7 @@
   ],
   "isSigned": "false",
   "dev": {
-    "root": "sygic",
+    "root": "start-sygic",
     "dist": {
       "host": "https://cdn.jsdelivr.net/gh/sygic/geotab@__VERSION__/geotabdrive-start-sygic-addin/dist/"
     }

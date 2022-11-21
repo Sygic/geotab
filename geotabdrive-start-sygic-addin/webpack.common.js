@@ -6,9 +6,9 @@ module.exports = {
     plugins: [
         new HtmlWebPackPlugin({
             
-            template: './src/app/sygic.html',
+            template: './src/app/start-sygic.html',
                         
-            filename: './sygic.html'
+            filename: './start-sygic.html'
         }),
         new MiniCssExtractPlugin({
             name: '[name].css',
@@ -17,6 +17,6 @@ module.exports = {
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'sygic.js'
+        filename: 'start-sygic.js'
     }
 }

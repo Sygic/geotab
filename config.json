@@ -31,7 +31,7 @@
       "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.1-rc/geotabdrive-sygic-addin/dist/images/icon.svg"
     },
     {
-      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.1-rc/geotabdrive-start-sygic-addin/dist/sygic.html",
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@v1.1.1-rc/geotabdrive-start-sygic-addin/dist/start-sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
         "en": "Start Sygic Truck",

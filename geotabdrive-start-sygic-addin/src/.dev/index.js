@@ -39,7 +39,7 @@ import './navbar/NavBuilder';
 /* Translations */
 import Translator from './lang/Translator';
 let language = localStorage.language ? localStorage.language : 'en';
-global.translator = new Translator('#sygic-app', language);
+global.translator = new Translator('#start-sygic-app', language);
 
 // Global Translate function
 global.state.translate = function(target, language) {
