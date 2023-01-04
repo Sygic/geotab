@@ -189,9 +189,76 @@ geotab.addin.sygic = function (api, state) {
     return el;
   }
 
-  function createSygicUri(lat, lon) {
-    let uri = `com.sygic.aura://coordinate|${lon}|${lat}|drive`;
+  function createSygicTruckNavigateToPointUri(lat, lon) {
+    let baseUri = `com.sygic.aura://coordinate|${lon}|${lat}|drive`;
+    let truckUri = createSygicTruckAttrUrl(uri);
+    //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
+    //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
+    let backUri = '&&&back_button|com.geotab.androidCheckmate';
+    let uri = `${baseUri}${truckUri}${backUri}`;
+    return uri;
+  }
+
+  function createSygicTruckNavigateToItineraryUri(zonePoints) {
+    let routeImport = {
+      version: '3.1',
+      directives: {
+        vehicleType: 'truck',
+        routeComputeType: 'truck',
+      },
+      vehicleRestrictions : {},
+      routeParts: []
+    };
+
+    for (let index = 0; index < zonePoints.length - 1; index++) {
+      const fromPoint = zonePoints[index];
+      const toPoint = zonePoints[index + 1];
+      const toWaypointType = index + 1 == zonePoints.length - 1 ? 'finish' : 'via';
+      routeImport.routeParts.push({
+        waypointFrom: {
+          lat: fromPoint.lat,
+          lon: fromPoint.lon,
+          type: 'via'
+        },
+        waypointTo: {
+          lat: toPoint.lat,
+          lon: toPoint.lon,
+          type: toWaypointType
+        }
+      })
+    }
+
+    let dimensions = Dimensions.getInputValues(elAddin);
+    if (dimensions.total_weight) {
+      routeImport.vehicleRestrictions.weight = dimensions.total_weight;
+    }
+    if (dimensions.axle_weight) {
+      //TODO: co tu?
+    }
+    if (dimensions.total_length) {
+      routeImport.vehicleRestrictions.totalLength = dimensions.total_length;
+    }
+    if (dimensions.width) {
+      routeImport.vehicleRestrictions.width = dimensions.width;
+    }
+    if (dimensions.height) {
+      routeImport.vehicleRestrictions.height = dimensions.height;
+    }
+
+    console.log(routeImport);
+    let baseUri = `com.sygic.aura://routeimport|${encodeURIComponent(JSON.stringify(routeImport))}`;
+
+    // let backUri = '&&&back_button|com.geotab.androidCheckmate'; //TODO: nefunguje
+    let backUri = '';
+
+    let uri = `${baseUri}${backUri}`;
+    console.log(uri);
+    return uri;
+  }
+
+  function createSygicTruckAttrUrl() {
+    let uri = '';
     let dimensions = Dimensions.getInputValues(elAddin);
     let valueArray = [];
     if (dimensions.total_weight) {
@@ -211,13 +278,9 @@ geotab.addin.sygic = function (api, state) {
     }
 
     if (valueArray.length > 0) {
-      uri += `&&&truckSettings|${valueArray.join('&')}&rou=tru`;
+      uri = `&&&truckSettings|${valueArray.join('&')}&rou=tru`;
     }
-
-    //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
-    //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
-    let location = encodeURI(uri);
-    return location;
+    return uri;
   }
   
   function resetView(){
@@ -308,18 +371,25 @@ geotab.addin.sygic = function (api, state) {
         container
       );
 
+      let tableHolder = createElement(
+        'div',
+        {},
+        container
+      )
+
       let table = createElement(
         'table',
         {
           classes: ['data-table', 'hidden'],
         },
-        container
+        tableHolder
       );
 
       routeListItem.addEventListener('click', async (event) => {
         event.preventDefault();
 
         if (table.classList.contains('hidden')) {
+          let zonePoints = [];
           for (
             let index = 0;
             index < route.routePlanItemCollection.length;
@@ -361,14 +431,26 @@ geotab.addin.sygic = function (api, state) {
 
             let lat = center[0];
             let lon = center[1];
+            zonePoints.push({lat, lon})
 
             a.setAttribute('href', '#');
             a.addEventListener('click', (event) => {
               event.preventDefault();
-              let location = createSygicUri(lat, lon);
+              let location = createSygicTruckNavigateToPointUri(lat, lon);
               window.open(location, '_system');
             });
           }
+
+          let itineraryOpenLink = createElement('a', {
+            content: state.translate('Open itinerary')
+          }, table);
+          itineraryOpenLink.setAttribute('href', '#');
+          itineraryOpenLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            let location = createSygicTruckNavigateToItineraryUri(zonePoints);
+            window.open(location, '_system');
+          });
+
         } else {
           table.innerHTML = '';
         }
