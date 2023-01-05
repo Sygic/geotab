@@ -14,7 +14,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const config = require('./src/app/config.json');
 
 const getHost = function() {
-    return config.dev.dist.host.replace("__VERSION__", `v${process.env.npm_package_version}`);
+    return config.dev.dist.host.replace("__VERSION__", `${process.env.npm_package_version}`);
 }
 /**
  * Removes "dev" element of the config tree on production build
@@ -25,7 +25,6 @@ const getHost = function() {
 const transform = function (content, path) {
     let config = JSON.parse(content);
     let host = getHost();
-    config.version = config.version.replace("__VERSION__", `${process.env.npm_package_version}`);
     let len = config.items.length;
     // Appending the host to all item's url and icon
     for(let i=0;i<len;i++){

@@ -25,15 +25,15 @@ npm run build
 ```
 4. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.1.4_).
 5. Build script from step 3 will create two files:
-    1. a combined config [dist/1.1.4/truck-settings-config.json](dist/1.1.4/truck-settings-config.json) for geotabdrive and mygeotab _Sygic Truck Settings_ addins.
-    2. single config [dist/1.1.4/start-sygic-config.json](dist/1.1.4/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
+    1. a combined config [dist/latest/truck-settings-config.json](dist/latest/truck-settings-config.json) for geotabdrive and mygeotab _Sygic Truck Settings_ addins.
+    2. single config [dist/latest/start-sygic-config.json](dist/latest/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
 These files should be used when installing addon to https://my.geotab.com.
 
 ## My Geotab Sygic Page
 
 This page allows you to set dimensions of 'Devices' ([see here](mygeotab-sygic-page/src/app/scripts/main.js#L232)).
 
-To install the page in mygeotab UI use this [config.json](mygeotab-sygic-page/dist/config.json)
+To install the page in mygeotab UI use this [config.json](dist/latest/truck-settings-config.json)
 
 ![My Geotab Sygic Addin Page](mygeotab-sygic-page.png)
 
@@ -49,7 +49,7 @@ To install the page in mygeotab UI use this [config.json](mygeotab-sygic-page/di
 
 This addin allows you to use [Sygic Professional Navigation](https://www.sygic.com/enterprise/professional-gps-navigation-sdk) to navigate to assigned 'Routes' of type 'Plan' to your 'Device' in the future (starting from now) ([see here](https://github.com/Sygic/sygic.github.io/blob/master/geotab/geotabdrive-sygic-addin/src/app/scripts/main.js#L189))
 
-To install the addin in Geotab Drive APP use this [config.json](geotabdrive-sygic-addin/dist/config.json)
+To install the addin in Geotab Drive APP use this [config.json](dist/latest/truck-settings-config.json)
 
 ![Geotab Drive Sygic Addin](geotabdrive-sygic-addin.png)
 

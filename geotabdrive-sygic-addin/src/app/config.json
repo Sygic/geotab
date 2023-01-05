@@ -1,8 +1,8 @@
 {
   "name": "Sygic Professional Navigation",
   "supportEmail": "os-team@sygic.com",
-  "version": "__VERSION__",
   "solutionId": "sygicSygic",
+  "version" : "1.0",
   "items": [
     {
       "url": "sygic.html",
