@@ -16,6 +16,19 @@
         "pl": "Ustawienia Sygic Truck"
       },
       "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.1.5/mygeotab-sygic-page/dist/images/icon.svg"
+    },
+    {
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.1.5/geotabdrive-sygic-addin/dist/sygic.html",
+      "path": "DriveAppLink/",
+      "menuName": {
+        "en": "Sygic Truck Settings",
+        "de": "Sygic Truck Einstellungen",
+        "es": "Configuración Sygic Truck",
+        "fr": "Paramètres Sygic Truck",
+        "it": "Sygic Truck Impostazioni",
+        "pl": "Ustawienia Sygic Truck"
+      },
+      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.1.5/geotabdrive-sygic-addin/dist/images/icon.svg"
     }
   ],
   "isSigned": "false"
