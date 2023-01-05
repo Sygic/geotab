@@ -2,6 +2,14 @@
 
 Clone repository. Navigate in respective addon directory ([geotabdrive-sygic-addin](geotabdrive-sygic-addin) or [mygeotab-sygic-page](mygeotab-sygic-page))
 
+### Before you start
+To ensure proper sygic-geotab-utils module inclusion in both projects you need to:
+
+1. ```cd ~/sygic-geotab-utils && npm link```
+2. ```cd ~/mygeotab-sygic-page && npm link sygic-geotab-utils```
+3. ```cd ~/geotabdrive-sygic-addin && npm link sygic-geotab-utils```
+
+### Run and develop
 To run locally run following in respective folders:
 
 ```
@@ -9,20 +17,17 @@ npm install
 npm run serve
 ```
 # Deployment
-1. To increase version, go to respective files and update _version_ ([geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json)). It will create a single [config.json](config.json) for both addons. Update version in [config.json](config.json) as well (best would be to keep everything - all addons - in sync).
-
-[geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json) addon has to be added separately (registration of two DriveAppLink/ addons doesn't go well in Geotab). Just use [geotabdrive-start-sygic-addin/dist/config.json](geotabdrive-start-sygic-addin/dist/config.json) for addon registration.
-2. To build production version run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page. 
+1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version has to be used in all addons in step 2.
+2. Use _version_ from step 1 in all addons' respective package.json files. [geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json).
+3. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
 ```
 npm run build
 ```
-3. Don't forget to [create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _v1.0.1_).
-
-To ensure proper sygic-geotab-utils module inclusion in both projects you need to:
-
-1. ```cd ~/sygic-geotab-utils && npm link```
-2. ```cd ~/mygeotab-sygic-page && npm link sygic-geotab-utils```
-3. ```cd ~/geotabdrive-sygic-addin && npm link sygic-geotab-utils```
+4. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.1.4_).
+5. Build script from step 3 will create two files:
+    1. a combined config [dist/1.1.4/truck-settings-config.json](dist/1.1.4/truck-settings-config.json) for geotabdrive and mygeotab _Sygic Truck Settings_ addins.
+    2. single config [dist/1.1.4/start-sygic-config.json](dist/1.1.4/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
+These files should be used when installing addon to https://my.geotab.com.
 
 ## My Geotab Sygic Page
 
