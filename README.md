@@ -18,11 +18,11 @@ npm run serve
 ```
 # Deployment
 1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version has to be used in all addons in step 2.
-2. Use _version_ from step 1 in all addons' respective package.json files. [geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json).
-3. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
+2. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
 ```
 npm run build
 ```
+3. The _version_ from step 1 is updated in all addons' respective package.json files. [geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json)
 4. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.1.4_).
 5. Build script from step 3 will create two files:
     1. a combined config [dist/latest/truck-settings-config.json](dist/latest/truck-settings-config.json) for geotabdrive and mygeotab _Sygic Truck Settings_ addins.
