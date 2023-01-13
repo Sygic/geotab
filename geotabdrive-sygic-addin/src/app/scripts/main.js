@@ -233,7 +233,7 @@ geotab.addin.sygic = function (api, state) {
       console.log(routeImport);
     }
     
-    let baseUri = `com.sygic.aura://routeimport|${encodeURIComponent(JSON.stringify(routeImport))}`;
+    let baseUri = `com.sygic.aura://routeimport|${encodeURIComponent(JSON.stringify(routeImport))}|sif`;
     // let backUri = '&&&back_button|com.geotab.androidCheckmate'; //TODO: nefunguje
     let backUri = '';
     let truckUri = createSygicTruckAttrUrl();
