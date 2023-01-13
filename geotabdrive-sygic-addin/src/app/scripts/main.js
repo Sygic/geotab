@@ -229,6 +229,23 @@ geotab.addin.sygic = function (api, state) {
       })
     }
 
+    let dimensions = Dimensions.getInputValues(elAddin);
+    if (dimensions.total_weight) {
+      routeImport.vehicleRestrictions.weight = dimensions.total_weight;
+    }
+    if (dimensions.axle_weight) {
+      //TODO: co tu?
+    }
+    if (dimensions.total_length) {
+      routeImport.vehicleRestrictions.totalLength = dimensions.total_length;
+    }
+    if (dimensions.width) {
+      routeImport.vehicleRestrictions.width = dimensions.width;
+    }
+    if (dimensions.height) {
+      routeImport.vehicleRestrictions.height = dimensions.height;
+    }
+
     if (window.DEBUG){
       console.log(routeImport);
     }
@@ -236,7 +253,8 @@ geotab.addin.sygic = function (api, state) {
     let baseUri = `com.sygic.aura://routeimport|${encodeURIComponent(JSON.stringify(routeImport))}|sif`;
     // let backUri = '&&&back_button|com.geotab.androidCheckmate'; //TODO: nefunguje
     let backUri = '';
-    let truckUri = createSygicTruckAttrUrl();
+    // let truckUri = createSygicTruckAttrUrl();
+    let truckUri = '';
 
     let uri = `${baseUri}${truckUri}${backUri}`;
 
