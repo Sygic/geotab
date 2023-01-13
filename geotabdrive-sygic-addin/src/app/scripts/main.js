@@ -373,22 +373,26 @@ geotab.addin.sygic = function (api, state) {
 
       let tableHolder = createElement(
         'div',
-        {},
+        { 
+          classes: ['hidden']
+        },
         container
       )
 
-      let table = createElement(
-        'table',
-        {
-          classes: ['data-table', 'hidden'],
-        },
-        tableHolder
-      );
+      
 
       routeListItem.addEventListener('click', async (event) => {
         event.preventDefault();
 
-        if (table.classList.contains('hidden')) {
+        let table = createElement(
+          'table',
+          {
+            classes: ['route-table'],
+          },
+          tableHolder
+        );
+
+        if (tableHolder.classList.contains('hidden')) {
           let zonePoints = [];
           for (
             let index = 0;
@@ -441,9 +445,9 @@ geotab.addin.sygic = function (api, state) {
             });
           }
 
-          let itineraryOpenLink = createElement('a', {
+          let itineraryOpenLink = createElement('button', {
             content: state.translate('Open itinerary')
-          }, table);
+          }, tableHolder);
           itineraryOpenLink.setAttribute('href', '#');
           itineraryOpenLink.addEventListener('click', (event) => {
             event.preventDefault();
@@ -452,9 +456,9 @@ geotab.addin.sygic = function (api, state) {
           });
 
         } else {
-          table.innerHTML = '';
+          tableHolder.innerHTML = '';
         }
-        table.classList.toggle('hidden');
+        tableHolder.classList.toggle('hidden');
       });
     });
   }

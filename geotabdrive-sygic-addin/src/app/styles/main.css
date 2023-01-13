@@ -10,6 +10,23 @@
     white-space: initial;
 }
 
+#sygic-app .route-table {
+    margin-top: 0.5em;
+}
+
+#sygic-app .route-table td {
+    padding-top: 0.3em;
+}
+
+#sygic-app .caption {
+    margin-top: 0.3em;
+
+}
+
+#sygic-my-trips button {
+    margin-top: 1em;
+}
+
 /*
 
 //THIS IS COPIED FROM HERE: https://github.com/Geotab/sdk/blob/master/src/software/js-samples/css/geotab.css
