@@ -2,18 +2,13 @@ const path = require('path');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const ImageminPlugin = require('imagemin-webpack');
-const ImageminMozjpeg = require('imagemin-mozjpeg');
-const ImageminPngquant = require('imagemin-pngquant');
-const ImageminGiflossy = require('imagemin-giflossy');
-const ImageminSvgo = require('imagemin-svgo');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const merge = require('webpack-merge');
 const common = require('./webpack.common.js');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const config = require('./src/app/config.json');
 
-const getHost = function() {
+const getHost = function () {
   return config.dev.dist.host.replace("__VERSION__", `${process.env.npm_package_version}`);
 }
 
@@ -108,16 +103,7 @@ module.exports = merge(common, {
     new UglifyJsPlugin({
       test: /\.js(\?.*)?$/i,
     }),
-    new ImageminPlugin({
-      exclude: /dev/,
-      test: /\.(jpe?g|png|gif|svg)$/,
-      plugins: [
-        ImageminMozjpeg(),
-        ImageminPngquant(),
-        ImageminGiflossy(),
-        ImageminSvgo({ cleanupIDs: false }),
-      ],
-    }),
+    //TODO: use image-minimizer-webpack-plugin
     new CopyWebpackPlugin([
       { from: './src/app/images/icon.svg', to: 'images/' },
       {

@@ -19,3 +19,7 @@ You can run production version of drive addin in browser https://my1291.geotab.c
 [Simple navigation back to chrome (not working)](http://com.sygic.aura://coordinate|17.17130470275879|48.17758750915527|drive&&&truckSettings|wei=10000&axw=5000&len=10000&wid=2500&hei=3000&rou=tru&&&back_button|com.android.chrome)
 
 [Simple navigation back to Geotab (not working)](http://com.sygic.aura://coordinate|17.17130470275879|48.17758750915527|drive&&&truckSettings|wei=10000&axw=5000&len=10000&wid=2500&hei=3000&rou=tru&&&back_button|com.geotab.androidCheckmate)
+
+
+# TODOS: 
+Route-Plan search not respecting fromDate parameter! Have to filter out old entries manually.

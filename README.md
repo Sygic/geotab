@@ -8,6 +8,7 @@ To ensure proper sygic-geotab-utils module inclusion in both projects you need t
 1. ```cd ~/sygic-geotab-utils && npm link```
 2. ```cd ~/mygeotab-sygic-page && npm link sygic-geotab-utils```
 3. ```cd ~/geotabdrive-sygic-addin && npm link sygic-geotab-utils```
+4. ```cd ~/sygic-geotab-utils && npm run compile```
 
 ### Run and develop
 To run locally run following in respective folders:
@@ -17,7 +18,7 @@ npm install
 npm run serve
 ```
 # Deployment
-1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version has to be used in all addons in step 2.
+1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version will be used in all addons in step 2.
 2. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
 ```
 npm run build
@@ -63,9 +64,13 @@ To install the addin in Geotab Drive APP use this [config.json](dist/latest/truc
 
 ## Security and access rights
 
-To view vehicles in the list a user must have **"List devices"** (securityIdentifier: DeviceList) and **"View Add-in data"** (securityIdentifier: ViewAddInData) feature access in his security clearance.
+To view vehicles in the list a user must have **"List assets"** (securityIdentifier: DeviceList) and **"View Add-in data"** (securityIdentifier: ViewAddInData) feature access in his security clearance. Without this permissions the addin will display a warning.
 
-To modify vehicle dimensions a user must have **"Administer devices"** (securityIdentifier: DeviceAdmin) and **Manage Add-in data** (securityIdentifier: ManageAddInData) feature access in his security clearance.
+To modify vehicle dimensions a user must have **"Administer assets"** (securityIdentifier: DeviceAdmin) and **Manage Add-in data** (securityIdentifier: ManageAddInData) feature access in his security clearance. Without this permissions the addin will not allow to change vehicle dimensions.
+
+To view vehicle assigned Route plans in Geotab Drive Sygic Addin a user must have **"Trips and activity report"** (securityIdentifier: TripsActivityReport) feature access in his security clearance and be an assigned **Driver**. Without this permission the addin will display a warning."
+
+![Permission warnings](geotabdrive-permission-warnings.png)
 
 ## Geotab login credentials
 1. You need to have an account at the testing server https://my1291.geotab.com/

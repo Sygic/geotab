@@ -2,12 +2,14 @@ import _ from 'underscore';
 
 const Filters = (() => {
   let RequiredEditFilters = ['DeviceAdmin', 'ManageAddInData'];
-  let RequiredViewFilters = ['DeviceList', 'ViewAddInData'];
+  let RequiredViewFilters = ['DeviceList', 'ViewAddInData',];
+  let RequiredPlanViewFilters = ['TripsActivityReport'];
   let Joker = 'Everything';
   return {
-    All: RequiredEditFilters.concat(RequiredViewFilters).concat(Joker),
+    All: RequiredEditFilters.concat(RequiredViewFilters).concat(RequiredPlanViewFilters).concat(Joker),
     RequiredEditFilters,
     RequiredViewFilters,
+    RequiredPlanViewFilters: RequiredPlanViewFilters,
     Joker
   };
 })();
@@ -47,6 +49,7 @@ export class User {
   constructor(geotabUser, allSecurityGroups) {
     this.canView = false;
     this.canModify = false;
+    this.canViewPlans = false;
     let userSecurityGroups = geotabUser.securityGroups.map((g) => g.id);
     if (userSecurityGroups.length > 0) {
       let securityGroupDetail = _.find(
@@ -62,6 +65,10 @@ export class User {
         securityGroupDetail,
         Filters.RequiredViewFilters
       );
+      this.canViewPlans = this.hasClearanceInTree(
+        securityGroupDetail,
+        Filters.RequiredPlanViewFilters
+      )
     }
   }
 
@@ -122,15 +129,14 @@ export function ApiWrapper(api) {
     callAsync: (method, parameters) => {
       return new Promise((resolve, reject) => {
         api.call(
-            method,
-            parameters,
-            (result) => resolve(result),
-            (err) => reject(err)
+          method,
+          parameters,
+          (result) => resolve(result),
+          (err) => reject(err)
         );
       })
     },
-    getSessionAsync: () =>
-    {
+    getSessionAsync: () => {
       return new Promise((resolve, reject) => {
         api.getSession((session) => {
           resolve(session);
