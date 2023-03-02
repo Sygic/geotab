@@ -1,0 +1,19 @@
+{
+    "Width (mm)": "Width (mm)",
+    "Height (mm)": "Height (mm)",
+    "Apply Changes": "Apply Changes",
+    "Sygic Truck Settings": "Sygic Truck Settings",
+    "Sygic Truck Settings tutorial": "Sygic Truck Settings tutorial",
+    "Total weight (kg)": "Total weight (kg)",
+    "Axle weight (kg)": "Axle weight (kg)",
+    "Total length (mm)": "Total length (mm)",
+    "Vehicle": "Vehicle",
+    "My Plans": "My Plans",
+    "stop": "stop",
+    "stops": "stops",
+    "first stop": "first stop",
+    "at": "at",
+    "on": "on",
+    "missing_devicelist_viewaddindata_warning": "You don't have the security clearance to view device data. Please contact your administrator to get 'List assets' and 'View Add-in data' (DeviceList, ViewAddInData) permissions.",
+    "missing_tripsactivityreport_warning": "You don't have the security clearance to view plans. Please contact your administrator to get 'Trips and activity report' (TripsActivityReport) permission."
+}
