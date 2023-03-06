@@ -1,4 +1,4 @@
-# How to use
+# Development guide
 
 Clone repository. Navigate in respective addon directory ([geotabdrive-sygic-addin](geotabdrive-sygic-addin) or [mygeotab-sygic-page](mygeotab-sygic-page))
 
@@ -17,7 +17,7 @@ To run locally run following in respective folders:
 npm install
 npm run serve
 ```
-# Deployment
+## Deployment
 1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version will be used in all addons in step 2.
 2. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
 ```
@@ -31,6 +31,14 @@ npm run build
 5. Push to github. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.1.9_).
 6. These files should be used when installing addon to my.geotab.com. We recommend to use concrete version (e.g. _1.1.9_) configuration instead of relying on latest.
 
+## Geotab login credentials
+1. You need to have an account at the testing server https://my1291.geotab.com/
+2. Login with your username + password and use sygic_test DB when prompted.
+
+## Geotab documentation reference
+https://geotab.github.io/sdk/software/guides/developing-addins/
+
+# Architecture and functionality overview
 ## My Geotab Sygic Page
 
 This page allows you to set dimensions of 'Devices' ([see here](mygeotab-sygic-page/src/app/scripts/main.js#L232)).
@@ -72,12 +80,5 @@ To modify vehicle dimensions a user must have **"Administer assets"** (securityI
 To view vehicle assigned Route plans in Geotab Drive Sygic Addin a user must have **"Trips and activity report"** (securityIdentifier: TripsActivityReport) feature access in his security clearance and be an assigned **Driver**. Without this permission the addin will display a warning."
 
 ![Permission warnings](geotabdrive-permission-warnings.png)
-
-## Geotab login credentials
-1. You need to have an account at the testing server https://my1291.geotab.com/
-2. Login with your username + password and use sygic_test DB when prompted.
-
-## Geotab documentation reference
-https://geotab.github.io/sdk/software/guides/developing-addins/
 
 Contact: [os-team@sygic.com](mailto:os-team@sygic.com)
