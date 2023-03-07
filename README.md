@@ -29,7 +29,7 @@ npm run build
     2. single config [dist/latest/start-sygic-config.json](dist/latest/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
     3. tagged release config versions in [dist/1.1.9/start-sygic-config.json](dist/1.1.9/start-sygic-config.json) and [dist/1.1.9/truck-settings-config.json](dist/1.1.9/truck-settings-config.json)
 5. Push to github. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.1.9_).
-6. These files should be used when installing addon to my.geotab.com. We recommend to use concrete version (e.g. _1.1.9_) configuration instead of relying on latest.
+6. Files from step 4. point iii. should be used when installing addon to my.geotab.com. We recommend to use concrete version (e.g. _1.1.9_) configuration instead of relying on latest.
 
 ## Geotab login credentials
 1. You need to have an account at the testing server https://my1291.geotab.com/
