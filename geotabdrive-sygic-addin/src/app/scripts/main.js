@@ -153,13 +153,15 @@ geotab.addin.sygic = function (api, state) {
     let formTemplate = _.template(dimensionsFormTemplate);
     let summaryTemplateObject = {};
     let labels = Dimensions.getLabels(state);
-    for (const key in dimensions) {
+
+    for (const key in labels) {
       const value = dimensions[key];
       summaryTemplateObject[key] = {
         value: value,
         label: labels[key],
       };
     }
+
     document.getElementById('sygic-dimensions-summary-content').innerHTML =
       summaryTemplate(summaryTemplateObject);
     document.getElementById('sygic-dimensions-form-content').innerHTML =
