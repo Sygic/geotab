@@ -4,6 +4,7 @@ import {
   ApiWrapper,
   Dimensions,
   DimensionsStorage,
+  DimensionsModel
 } from 'sygic-geotab-utils';
 /**
  * @returns {{initialize: Function, focus: Function, blur: Function}}
@@ -14,6 +15,7 @@ geotab.addin.sygic = function (api, state) {
   const noDeviceId = 'NoDeviceId';
   let cachedUser = null;
   let addonDeviceId = undefined;
+  let addonUser = undefined;
 
   let geotabApi = ApiWrapper(api);
 
@@ -140,25 +142,16 @@ geotab.addin.sygic = function (api, state) {
   // the root container
   let elAddin = document.getElementById('sygic-app');
 
-  function calculateCenter(arr) {
-    var x = arr.map(xy => xy[0]);
-    var y = arr.map(xy => xy[1]);
-    var cx = (Math.min(...x) + Math.max(...x)) / 2;
-    var cy = (Math.min(...y) + Math.max(...y)) / 2;
-    return [cx, cy];
-  }
-
-  function populateDimensions(dimensions) {
+  function showDimensions(viewModel) {
     let summaryTemplate = _.template(dimensionsDataTemplate);
     let formTemplate = _.template(dimensionsFormTemplate);
     let summaryTemplateObject = {};
-    let labels = Dimensions.getLabels(state);
 
-    for (const key in labels) {
-      const value = dimensions[key];
+    for (const key in viewModel) {
+      const valueObject = viewModel[key];
       summaryTemplateObject[key] = {
-        value: value,
-        label: labels[key],
+        value: valueObject.value,
+        label: valueObject.label,
       };
     }
 
@@ -173,23 +166,6 @@ geotab.addin.sygic = function (api, state) {
     document
       .getElementById('sygic-dimensions-summary')
       .classList.toggle('hidden');
-  }
-
-  function createElement(tag, options = {}, parent = null) {
-    let el = document.createElement(tag);
-    (options.classes || []).forEach((c) => {
-      el.classList.add(c);
-    });
-    if (options.content) {
-      el.appendChild(document.createTextNode(options.content));
-    }
-    if (options.style) {
-      el.style = options.style;
-    }
-    if (parent) {
-      parent.appendChild(el);
-    }
-    return el;
   }
 
   function createSygicTruckNavigateToPointUri(lat, lon) {
@@ -324,6 +300,32 @@ geotab.addin.sygic = function (api, state) {
   }
 
   async function loadTrips(device) {
+
+    function createElement(tag, options = {}, parent = null) {
+      let el = document.createElement(tag);
+      (options.classes || []).forEach((c) => {
+        el.classList.add(c);
+      });
+      if (options.content) {
+        el.appendChild(document.createTextNode(options.content));
+      }
+      if (options.style) {
+        el.style = options.style;
+      }
+      if (parent) {
+        parent.appendChild(el);
+      }
+      return el;
+    }
+
+    function calculateCenter(arr) {
+      var x = arr.map(xy => xy[0]);
+      var y = arr.map(xy => xy[1]);
+      var cx = (Math.min(...x) + Math.max(...x)) / 2;
+      var cy = (Math.min(...y) + Math.max(...y)) / 2;
+      return [cx, cy];
+    }
+
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     let myRoutes = await geotabApi.callAsync('Get', {
@@ -482,12 +484,12 @@ geotab.addin.sygic = function (api, state) {
   }
 
   async function loadDimensions(deviceId) {
-    let storage = new DimensionsStorage(geotabApi);
-    let myDimensions = await storage.getDimensionsAsync(deviceId);
+    const storage = new DimensionsStorage(geotabApi);
+    const myDimensions = await storage.getDimensionsModelAsync(deviceId);
     if (!myDimensions) {
-      populateDimensions(Dimensions.getEmpty());
+      showDimensions(DimensionsModel.getEmpty(addonUser.isMetric, state));
     } else {
-      populateDimensions(myDimensions.dimensions);
+      showDimensions(myDimensions.dimensions.getViewModel(addonUser.isMetric, state));
     }
 
     return myDimensions;
@@ -515,15 +517,16 @@ geotab.addin.sygic = function (api, state) {
   }
 
 
-  async function saveDinemsions(deviceId) {
-    let storage = new DimensionsStorage(geotabApi);
-    let dimensionsInputs = Dimensions.getInputValues(elAddin);
-    let myDimensions = await storage.getDimensionsAsync(deviceId);
+  async function saveDimensions(deviceId) {
+    const storage = new DimensionsStorage(geotabApi);
+    const dimensionsInputs = Dimensions.getInputValues(elAddin);
+    const myDimensions = await storage.getDimensionsModelAsync(deviceId);
+    const dimensionsModel = DimensionsModel.getFromStringInputs(dimensionsInputs, addonUser.isMetric);
 
     if (myDimensions) {
       try {
         await storage.setDimensionsAsync(
-          dimensionsInputs,
+          dimensionsModel,
           myDimensions.id,
           deviceId
         );
@@ -532,7 +535,7 @@ geotab.addin.sygic = function (api, state) {
       }
     } else {
       await storage.addDimensionsAsync(
-        dimensionsInputs,
+        dimensionsModel,
         deviceId
       );
     }
@@ -582,9 +585,9 @@ geotab.addin.sygic = function (api, state) {
 
       document
         .getElementById('sygic-save-dimensions')
-        .addEventListener('click', function (event) {
+        .addEventListener('click', async function (event) {
           event.preventDefault();
-          saveDinemsions(addonDeviceId);
+          await saveDimensions(addonDeviceId);
         });
 
       // MUST call initializeCallback when done any setup
@@ -610,39 +613,37 @@ geotab.addin.sygic = function (api, state) {
 
       resetView();
 
-      let user = await getUser();
+      addonUser = await getUser();
 
       let deviceId = freshState.device.id;
       if (window.DEBUG) {
         window.sygic = {
           freshState,
           DimensionsStorage,
-          geotabApi
+          geotabApi,
+          addonUser
         }
       }
 
       addonDeviceId = deviceId;
       // deviceId = noDeviceId;
-      // user.canViewPlans = false;
-      // user.canView = false;
-
-      // if (false)
+      // addonUser.canViewPlans = false;
+      // addonUser.canView = false;
+      // addonUser.isMetric = false;
 
       //hide editing functionality if no device is selected
       if (deviceId !== noDeviceId) {
         let device = await loadDevice(deviceId);
 
-        if (user.canViewPlans) {
+        if (addonUser.canViewPlans) {
           await loadTrips(device);
         }
 
         let dimensions = await loadDimensions(deviceId);
 
-        if (user.canModify) {
+        if (addonUser.canModify) {
           show(document.getElementById('sygic-edit-dimensions'));
         }
-
-        console.log(user)
 
         if (window.DEBUG) {
           window.sygic.dimensions = dimensions;
@@ -652,30 +653,14 @@ geotab.addin.sygic = function (api, state) {
         hide(document.getElementById('sygic-no-vehicle-warning'));
       }
 
-      if (user.canViewPlans === false) {
+      if (addonUser.canViewPlans === false) {
         show(document.getElementById('sygic-cannot-view-plans-warning'));
       }
 
-      if (user.canView === false) {
+      if (addonUser.canView === false) {
         show(document.getElementById('sygic-cannot-view-vehicles-warning'));
         hide(document.getElementById('sygic-no-vehicle-warning'))
       }
-
-      // let storage = new DimensionsStorage(geotabApi);
-      // let myDimensions = await storage.getAllDimensionsAsync();
-      // console.log(myDimensions)
-      // for (let i = 0; i < myDimensions.length; i++) {
-      //   let dim = myDimensions[i];
-      //   if (dim.details.vehicle_id === noDeviceId){
-      //     await geotabApi.callAsync('Remove', {
-      //       typeName: 'AddInData',
-      //       entity: {
-      //         addInId: 'ajk3ZmUzNmQtYjNlYS0yMGI',
-      //         id: dim.id,
-      //       }
-      //     })
-      //   }
-      // }
 
       //show main content
       elAddin.className = elAddin.className.replace('hidden', '').trim();

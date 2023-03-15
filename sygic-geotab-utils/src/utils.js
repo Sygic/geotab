@@ -50,6 +50,7 @@ export class User {
     this.canView = false;
     this.canModify = false;
     this.canViewPlans = false;
+    this.isMetric = geotabUser.isMetric ?? true; //in case the api contract changes, we will default to true
     let userSecurityGroups = geotabUser.securityGroups.map((g) => g.id);
     if (userSecurityGroups.length > 0) {
       let securityGroupDetail = _.find(
@@ -146,7 +147,86 @@ export function ApiWrapper(api) {
   };
 }
 
+export class DimensionsModel {
+  constructor({ width, height, total_weight, axle_weight, total_length }) {
+    this.width = width;
+    this.height = height;
+    this.total_length = total_length;
+    this.axle_weight = axle_weight;
+    this.total_weight = total_weight;
+  }
+
+  static getEmpty(isMetric, state) {
+    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined }).getViewModel(isMetric, state)
+  }
+
+  static getFromStringInputs({ width, height, total_weight, axle_weight, total_length }, isMetric = true) {
+    width = Number.parseInt(width);
+    height = Number.parseInt(height);
+    total_weight = Number.parseInt(total_weight);
+    axle_weight = Number.parseInt(axle_weight);
+    total_length = Number.parseInt(total_length);
+
+    if (!isMetric) {
+      width = Dimensions.convertDimensionToMetric(width);
+      height = Dimensions.convertDimensionToMetric(height);
+      total_weight = Dimensions.convertWeightToMetric(total_weight);
+      axle_weight = Dimensions.convertWeightToMetric(axle_weight);
+      total_length = Dimensions.convertDimensionToMetric(total_length);
+    }
+
+    const data = { width, height, total_weight, axle_weight, total_length };
+    return new DimensionsModel(data);
+  }
+
+  getViewModel(isMetric, state) {
+    return {
+      width: {
+        value: isMetric ? this.width : Dimensions.convertDimensionToImperial(this.width),
+        label: isMetric ? `${state.translate('Width')} (mm)` : `${state.translate('Width')} (ft)`
+      },
+      height: {
+        value: isMetric ? this.height : Dimensions.convertDimensionToImperial(this.height),
+        label: isMetric ? `${state.translate('Height')} (mm)` : `${state.translate('Height')} (ft)`
+      },
+      total_length: {
+        value: isMetric ? this.total_length : Dimensions.convertDimensionToImperial(this.total_length),
+        label: isMetric ? `${state.translate('Total length')} (mm)` : `${state.translate('Total length')} (ft)`
+      },
+      axle_weight: {
+        value: isMetric ? this.axle_weight : Dimensions.convertWeightToImperial(this.axle_weight),
+        label: isMetric ? `${state.translate('Axle weight')} (kg)` : `${state.translate('Axle weight')} (lb)`
+      },
+      total_weight: {
+        value: isMetric ? this.total_weight : Dimensions.convertWeightToImperial(this.total_weight),
+        label: isMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
+      }
+    }
+  }
+}
+
+const constants = {
+  poundsInKilos: 2.20462262,
+  feetInMilimeters: 0.00328084
+};
+
 export let Dimensions = {
+  convertWeightToMetric: (weight) => {
+    return Math.round(weight / constants.poundsInKilos)
+  },
+
+  convertDimensionToMetric: (dimension) => {
+    return Math.round(dimension / constants.feetInMilimeters);
+  },
+
+  convertWeightToImperial: (weight) => {
+    return Math.round(weight * constants.poundsInKilos);
+  },
+
+  convertDimensionToImperial: (dimension) => {
+    return Math.round(dimension * constants.feetInMilimeters);
+  },
+
   getEmpty: () => ({
     width: undefined,
     height: undefined,
@@ -198,6 +278,23 @@ export function DimensionsStorage(geotabApi) {
         let item = result[0];
         return {
           dimensions: item.details.dimensions,
+          id: item.id,
+        };
+      }
+    },
+    getDimensionsModelAsync: async (vehicleId) => {
+      let result = await geotabApi.callAsync('Get', {
+        typeName: 'AddInData',
+        search: {
+          addInId: addinDataGuid,
+          whereClause: `vehicle_id=\"${vehicleId}\"`,
+        },
+      });
+      if (result && result.length > 0) {
+        let item = result[0];
+        const model = DimensionsModel.getFromStringInputs(item.details.dimensions);
+        return {
+          dimensions: model,
           id: item.id,
         };
       }
