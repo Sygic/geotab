@@ -294,7 +294,7 @@ geotab.addin.sygic = function (api, state) {
 
   function resetView() {
     elAddin.querySelector('#sygic-vehicle').textContent = '-';
-    show(document.getElementById('sygic-dimensions-no-vehicle'))
+    show(document.getElementById('sygic-no-vehicle-warning'));
     hide(document.getElementById('sygic-dimensions-summary'));
     hide(document.getElementById('sygic-edit-dimensions'));
   }
@@ -610,7 +610,7 @@ geotab.addin.sygic = function (api, state) {
 
       let user = await getUser();
 
-      const deviceId = freshState.device.id;
+      let deviceId = freshState.device.id;
       if (window.DEBUG) {
         window.sygic = {
           freshState,
@@ -620,9 +620,10 @@ geotab.addin.sygic = function (api, state) {
       }
 
       addonDeviceId = deviceId;
-
+      // deviceId = noDeviceId;
       // user.canViewPlans = false;
       // user.canView = false;
+
       // if (false)
 
       //hide editing functionality if no device is selected
@@ -645,8 +646,8 @@ geotab.addin.sygic = function (api, state) {
           window.sygic.dimensions = dimensions;
         }
 
-        hide(document.getElementById('sygic-dimensions-no-vehicle'))
         show(document.getElementById('sygic-dimensions-summary'));
+        hide(document.getElementById('sygic-no-vehicle-warning'));
       }
 
       if (user.canViewPlans === false) {
@@ -655,7 +656,7 @@ geotab.addin.sygic = function (api, state) {
 
       if (user.canView === false) {
         show(document.getElementById('sygic-cannot-view-vehicles-warning'));
-        hide(document.getElementById('sygic-dimensions-no-vehicle'))
+        hide(document.getElementById('sygic-no-vehicle-warning'))
       }
 
       // let storage = new DimensionsStorage(geotabApi);

@@ -1,5 +1,5 @@
 .hidden {
-    display: none!important;
+    display: none !important;
 }
 
 #sygic-tutorial.panel-button-heading {
@@ -25,6 +25,11 @@
 
 #sygic-my-trips button {
     margin-top: 1em;
+}
+
+.sygic-warning-div {
+    color: red;
+    padding: 16px;
 }
 
 /*
