@@ -4,6 +4,7 @@ import {
   ApiWrapper,
   Dimensions,
   DimensionsStorage,
+  DimensionsModel,
 } from 'sygic-geotab-utils';
 
 /**
@@ -59,54 +60,45 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
 
   let geotabApi = ApiWrapper(api);
 
-  function getDimensionsString(dimensionsObject) {
+  function getDimensionsString(viewModel) {
     let iterator = 0;
     let dimensionDetailsString = '';
-    let labels = Dimensions.getLabels(state);
-    for (const key in dimensionsObject) {
-      if (dimensionsObject.hasOwnProperty(key)) {
-        const value = dimensionsObject[key];
+    for (const key in viewModel) {
+      if (viewModel.hasOwnProperty(key)) {
+        const model = viewModel[key];
         if (iterator++ > 0) dimensionDetailsString += ', ';
-        dimensionDetailsString += `${labels[key]}: ${value}`;
+        dimensionDetailsString += `${model.label}: ${model.value}`;
       }
     }
     return dimensionDetailsString;
   }
 
-  function renderDeviceList(devices, dimensions, user) {
+  function renderDeviceList({ devices, dimensions, user }) {
     let vehicleList = document.getElementById('sygic-vehicle-list');
     let storage = new DimensionsStorage(geotabApi);
 
     vehicleList.innerHTML = '';
-
-    let dimensionsDict = Object.assign(
-      {},
-      ...dimensions.map((dimension) => {
-        let data = dimension.details;
-        return {
-          [data.vehicle_id]: data.dimensions,
-        };
-      })
-    );
 
     let template = _.template(templateString);
 
     for (let index = 0; index < devices.length; index++) {
       const device = devices[index];
       let dimensionDetailsString = '';
-      let baseDimensions = Dimensions.getEmpty();
 
-      if (dimensionsDict[device.id]) {
-        Object.assign(baseDimensions, dimensionsDict[device.id]);
-        dimensionDetailsString = getDimensionsString(baseDimensions);
+      let viewModel = undefined;
+      if (dimensions[device.id]) {
+        viewModel = dimensions[device.id].getViewModelWithUnits(user.isMetric, state);
+        dimensionDetailsString = getDimensionsString(viewModel);
       } else {
+        viewModel = DimensionsModel.getEmptyViewModel(user.isMetric, state);
         dimensionDetailsString = 'Dimensions unset';
       }
 
-      let dimensionsTemplateObject = Object.keys(baseDimensions).map((key) => ({
-        value: baseDimensions[key],
+
+      let dimensionsTemplateObject = Object.keys(viewModel).map(key => ({
+        value: viewModel[key].value,
         key: key,
-        label: Dimensions.getLabels(state)[key],
+        label: viewModel[key].label
       }));
 
       let vehicle_groups_string = device.groups.map((c) => c.name).join(', ');
@@ -140,15 +132,15 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
         'sygic-vehicle-dimensions-save'
       )[0];
       sumbitButton.addEventListener('click', async (event) => {
-        let inputValues = Dimensions.getInputValues(fieldSet);
-
-        let storedDimensions = await storage.getDimensionsAsync(deviceId);
+        let dimensionsInputs = Dimensions.getInputValues(fieldSet);
+        const dimensionsModel = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+        let storedDimensions = await storage.getDimensionsModelAsync(deviceId);
         if (!storedDimensions) {
-          await storage.addDimensionsAsync(inputValues, deviceId);
+          await storage.addDimensionsAsync(dimensionsModel, deviceId);
         } else {
           try {
             await storage.setDimensionsAsync(
-              inputValues,
+              dimensionsModel,
               storedDimensions.id,
               deviceId
             );
@@ -158,7 +150,8 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
         }
         comment.classList.toggle('hidden');
         form.classList.toggle('hidden');
-        comment.innerHTML = getDimensionsString(inputValues);
+        const model = dimensionsModel.getViewModelWithUnits(user.isMetric, state);
+        comment.innerHTML = getDimensionsString(model);
       });
     });
   }
@@ -192,7 +185,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
       });
     });
 
-    let dimensions = await storage.getAllDimensionsAsync();
+    let dimensions = await storage.getAllDimensionsModelsAsync();
 
     let session = await geotabApi.getSessionAsync();
     let geotabUser = await geotabApi.callAsync('Get', {
@@ -210,7 +203,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
     });
 
     let user = new User(geotabUser[0], geotabClearances);
-
+    // user.isMetric = false;
     return { devices, dimensions, user };
   }
 
@@ -249,8 +242,16 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
       elAddin.className = '';
       // show main content
 
+      // await geotabApi.callAsync('Remove', {
+      //   typeName: 'AddInData',
+      //   entity: {
+      //     addInId: 'ajk3ZmUzNmQtYjNlYS0yMGI',
+      //     id: 'a0gr0GfY9YkOxnAb7N16fKA',
+      //   }
+      // })
+
       let data = await prepareData();
-      renderDeviceList(data.devices, data.dimensions, data.user);
+      renderDeviceList(data);
     },
 
     /**

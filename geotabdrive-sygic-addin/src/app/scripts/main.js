@@ -487,9 +487,9 @@ geotab.addin.sygic = function (api, state) {
     const storage = new DimensionsStorage(geotabApi);
     const myDimensions = await storage.getDimensionsModelAsync(deviceId);
     if (!myDimensions) {
-      showDimensions(DimensionsModel.getEmpty(addonUser.isMetric, state));
+      showDimensions(DimensionsModel.getEmptyViewModel(addonUser.isMetric, state));
     } else {
-      showDimensions(myDimensions.dimensions.getViewModel(addonUser.isMetric, state));
+      showDimensions(myDimensions.dimensions.getViewModelWithUnits(addonUser.isMetric, state));
     }
 
     return myDimensions;
