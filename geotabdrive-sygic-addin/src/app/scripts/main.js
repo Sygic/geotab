@@ -126,7 +126,7 @@ geotab.addin.sygic = function (api, state) {
       <%  let value = obj[key].value; %>
       <label for='sygic-truck-<%= key %>' class='form-input'>
       <%= dimension_label %>
-      <input type='number' name='sygic-truck-<%= key %>' value='<%= value %>' class='form-input' />
+      <input type='number' step=0.1 name='sygic-truck-<%= key %>' value='<%= value %>' class='form-input' />
       </label>
   <% }} %>
   `;

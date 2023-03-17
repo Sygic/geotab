@@ -148,13 +148,12 @@ export function ApiWrapper(api) {
 }
 
 export class DimensionsModel {
-  constructor({ width, height, total_weight, axle_weight, total_length, isMetric }) {
+  constructor({ width, height, total_weight, axle_weight, total_length }) {
     this.width = width;
     this.height = height;
     this.total_length = total_length;
     this.axle_weight = axle_weight;
     this.total_weight = total_weight;
-    this.isMetric = isMetric ?? true;
   }
 
   static getEmpty() {
@@ -166,65 +165,63 @@ export class DimensionsModel {
   }
 
   static getFromStringInputs({ width, height, total_weight, axle_weight, total_length }, isMetric = true) {
-    width = Number.parseInt(width);
-    height = Number.parseInt(height);
-    total_weight = Number.parseInt(total_weight);
-    axle_weight = Number.parseInt(axle_weight);
-    total_length = Number.parseInt(total_length);
+    width = Number.parseFloat(width);
+    height = Number.parseFloat(height);
+    total_weight = Number.parseFloat(total_weight);
+    axle_weight = Number.parseFloat(axle_weight);
+    total_length = Number.parseFloat(total_length);
+    if (isMetric === false) {
+      width = Dimensions.convertDimensionToMetric(width);
+      height = Dimensions.convertDimensionToMetric(height);
+      total_weight = Dimensions.convertWeightToMetric(total_weight);
+      axle_weight = Dimensions.convertWeightToMetric(axle_weight);
+      total_length = Dimensions.convertDimensionToMetric(total_length);
+    }
 
-    const data = { width, height, total_weight, axle_weight, total_length, isMetric };
+    const data = { width, height, total_weight, axle_weight, total_length };
     return new DimensionsModel(data);
   }
 
-  getViewModelWithUnits(shouldBeMetric, state) {
+  getViewModelWithUnits(isMetric, state) {
     let width = undefined;
     let height = undefined;
     let total_length = undefined;
     let total_weight = undefined;
     let axle_weight = undefined;
-    const keepUnits = this.isMetric === true && shouldBeMetric === true || this.isMetric === false && shouldBeMetric === false;
-
-    if (keepUnits) {
+    if (isMetric) {
       width = this.width;
       height = this.height;
       total_length = this.total_length;
       total_weight = this.total_weight;
       axle_weight = this.axle_weight;
     } else {
-      if (shouldBeMetric) {
-        width = Dimensions.convertDimensionToMetric(this.width);
-        height = Dimensions.convertDimensionToMetric(this.height);
-        total_length = Dimensions.convertDimensionToMetric(this.total_length);
-        axle_weight = Dimensions.convertWeightToMetric(this.axle_weight);
-        total_weight = Dimensions.convertWeightToMetric(this.total_weight);
-      } else {
-        width = Dimensions.convertDimensionToImperial(this.width);
-        height = Dimensions.convertDimensionToImperial(this.height);
-        total_length = Dimensions.convertDimensionToImperial(this.total_length);
-        axle_weight = Dimensions.convertWeightToImperial(this.axle_weight);
-        total_weight = Dimensions.convertWeightToImperial(this.total_weight);
-      }
+      width = Dimensions.convertDimensionToImperial(this.width);
+      height = Dimensions.convertDimensionToImperial(this.height);
+      total_length = Dimensions.convertDimensionToImperial(this.total_length);
+      axle_weight = Dimensions.convertWeightToImperial(this.axle_weight);
+      total_weight = Dimensions.convertWeightToImperial(this.total_weight);
     }
+
     return {
       width: {
         value: width,
-        label: shouldBeMetric ? `${state.translate('Width')} (mm)` : `${state.translate('Width')} (ft)`
+        label: isMetric ? `${state.translate('Width')} (mm)` : `${state.translate('Width')} (ft)`
       },
       height: {
         value: height,
-        label: shouldBeMetric ? `${state.translate('Height')} (mm)` : `${state.translate('Height')} (ft)`
+        label: isMetric ? `${state.translate('Height')} (mm)` : `${state.translate('Height')} (ft)`
       },
       total_length: {
         value: total_length,
-        label: shouldBeMetric ? `${state.translate('Total length')} (mm)` : `${state.translate('Total length')} (ft)`
+        label: isMetric ? `${state.translate('Total length')} (mm)` : `${state.translate('Total length')} (ft)`
       },
       axle_weight: {
         value: axle_weight,
-        label: shouldBeMetric ? `${state.translate('Axle weight')} (kg)` : `${state.translate('Axle weight')} (lb)`
+        label: isMetric ? `${state.translate('Axle weight')} (kg)` : `${state.translate('Axle weight')} (lb)`
       },
       total_weight: {
         value: total_weight,
-        label: shouldBeMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
+        label: isMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
       }
     }
   }
@@ -245,11 +242,11 @@ export let Dimensions = {
   },
 
   convertWeightToImperial: (weight) => {
-    return Math.round(weight * constants.poundsInKilos);
+    return Math.round(weight * constants.poundsInKilos); //don't round lbs.
   },
 
   convertDimensionToImperial: (dimension) => {
-    return Math.round(dimension * constants.feetInMilimeters);
+    return Math.round(dimension * constants.feetInMilimeters * 10) / 10;
   },
 
   getInputValues: (parentElement) => {

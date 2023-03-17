@@ -48,7 +48,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
             <%  let label = dimension.label; %>
           <div class='geotabField'>
             <label for=<%= name %>><%= label %></label>
-            <input type='number' name=<%= name %> class='geotabFormEditField' value=<%= value %> />
+            <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
           </div>
         <% }) %>
         <button class='geotabButton sygic-vehicle-dimensions-save' ><%= apply_changes %></button>
