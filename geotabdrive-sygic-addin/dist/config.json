@@ -5,7 +5,7 @@
   "version": "1.0",
   "items": [
     {
-      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.2.0/geotabdrive-sygic-addin/dist/sygic.html",
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.2.1/geotabdrive-sygic-addin/dist/sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
         "en": "Sygic Truck Settings",
@@ -15,7 +15,7 @@
         "it": "Sygic Truck Impostazioni",
         "pl": "Ustawienia Sygic Truck"
       },
-      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.2.0/geotabdrive-sygic-addin/dist/images/icon.svg"
+      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@1.2.1/geotabdrive-sygic-addin/dist/images/icon.svg"
     }
   ],
   "isSigned": "false"
