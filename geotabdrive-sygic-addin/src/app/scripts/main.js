@@ -231,8 +231,8 @@ geotab.addin.sygic = function (api, state) {
 
     let baseUri = 'com.sygic.aura://routeimport|';
     let truckUri = `${encodeURIComponent(JSON.stringify(routeImport))}|sif`;
-    // let backUri = '';
-    let backUri = '&&&back_button|com.geotab.androidCheckmate';
+    let backUri = '';
+    // let backUri = '&&&back_button|com.geotab.androidCheckmate';
 
     let uri = `${baseUri}${truckUri}${backUri}`;
 
