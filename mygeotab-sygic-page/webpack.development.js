@@ -26,7 +26,7 @@ module.exports = merge(common, {
                     {
                         loader: 'eslint-loader',
                         options: {
-                        formatter: require('eslint/lib/cli-engine/formatters/stylish')
+                            formatter: require('eslint/lib/cli-engine/formatters/stylish')
                         },
                     },
                 ],
@@ -60,14 +60,16 @@ module.exports = merge(common, {
     },
     plugins: [
         new CopyWebpackPlugin([
-            { from: './src/app/images/icon.svg', to: 'images/'},
-            { from: './src/app/config.json'}
+            { from: './src/app/images/icon.svg', to: 'images/' },
+            { from: './src/app/config.json' }
         ])
     ],
     devServer: {
         contentBase: path.join(__dirname),
         compress: true,
         port: 9001,
-        index: 'mygeotabSygicPage.html'
+        index: 'mygeotabSygicPage.html',
+        host: '0.0.0.0',
+        disableHostCheck: true
     },
 });
