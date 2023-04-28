@@ -234,19 +234,19 @@ const constants = {
 
 export let Dimensions = {
   convertWeightToMetric: (weight) => {
-    return Math.round(weight / constants.poundsInKilos)
+    return Math.round(weight / constants.poundsInKilos * 100) / 100;
   },
 
   convertDimensionToMetric: (dimension) => {
-    return Math.round(dimension / constants.feetInMilimeters);
+    return Math.round(dimension / constants.feetInMilimeters * 100) / 100;
   },
 
   convertWeightToImperial: (weight) => {
-    return Math.round(weight * constants.poundsInKilos); //don't round lbs.
+    return Math.round(weight * constants.poundsInKilos * 100) / 100;
   },
 
   convertDimensionToImperial: (dimension) => {
-    return Math.round(dimension * constants.feetInMilimeters * 10) / 10;
+    return Math.round(dimension * constants.feetInMilimeters * 100) / 100;
   },
 
   getInputValues: (parentElement) => {
