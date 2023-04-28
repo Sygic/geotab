@@ -202,25 +202,28 @@ export class DimensionsModel {
       total_weight = Dimensions.convertWeightToImperial(this.total_weight);
     }
 
+    // numbers are stored with 5 decimals. Displayed and used when parsing inputs with 2 decimals.
+    let roundTo2Decimals = (number) => Math.round(number * 100) / 100;
+
     return {
       width: {
-        value: width,
+        value: roundTo2Decimals(width),
         label: isMetric ? `${state.translate('Width')} (mm)` : `${state.translate('Width')} (ft)`
       },
       height: {
-        value: height,
+        value: roundTo2Decimals(height),
         label: isMetric ? `${state.translate('Height')} (mm)` : `${state.translate('Height')} (ft)`
       },
       total_length: {
-        value: total_length,
+        value: roundTo2Decimals(total_length),
         label: isMetric ? `${state.translate('Total length')} (mm)` : `${state.translate('Total length')} (ft)`
       },
       axle_weight: {
-        value: axle_weight,
+        value: roundTo2Decimals(axle_weight),
         label: isMetric ? `${state.translate('Axle weight')} (kg)` : `${state.translate('Axle weight')} (lb)`
       },
       total_weight: {
-        value: total_weight,
+        value: roundTo2Decimals(total_weight),
         label: isMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
       }
     }
@@ -233,24 +236,24 @@ const constants = {
 };
 
 export let Dimensions = {
-  convertWeightToMetric: (weight) => {
+  convertWeightToMetric: (weight, rounding = 1e5) => {
     if (weight !== undefined)
-      return Math.round(weight / constants.poundsInKilos * 100) / 100;
+      return Math.round(weight / constants.poundsInKilos * rounding) / rounding;
   },
 
-  convertDimensionToMetric: (dimension) => {
+  convertDimensionToMetric: (dimension, rounding = 1e5) => {
     if (dimension !== undefined)
-      return Math.round(dimension / constants.feetInMilimeters * 100) / 100;
+      return Math.round(dimension  / constants.feetInMilimeters * rounding) / rounding;
   },
 
-  convertWeightToImperial: (weight) => {
+  convertWeightToImperial: (weight, rounding = 1e5) => {
     if (weight !== undefined)
-      return Math.round(weight * constants.poundsInKilos * 100) / 100;
+      return Math.round(weight * constants.poundsInKilos * rounding) / rounding;
   },
 
-  convertDimensionToImperial: (dimension) => {
+  convertDimensionToImperial: (dimension, rounding = 1e5) => {
     if (dimension !== undefined)
-      return Math.round(dimension * constants.feetInMilimeters * 100) / 100;
+      return Math.round(dimension * constants.feetInMilimeters * rounding) / rounding;
   },
 
   getInputValues: (parentElement) => {
