@@ -203,7 +203,10 @@ export class DimensionsModel {
     }
 
     // numbers are stored with 5 decimals. Displayed and used when parsing inputs with 2 decimals.
-    let roundTo2Decimals = (number) => Math.round(number * 100) / 100;
+    let roundTo2Decimals = (number) => {
+      if (number !== undefined)
+        return Math.round(number * 100) / 100;
+    }
 
     return {
       width: {
