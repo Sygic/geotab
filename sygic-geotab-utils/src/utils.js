@@ -204,7 +204,7 @@ export class DimensionsModel {
 
     // numbers are stored with 5 decimals. Displayed and used when parsing inputs with 2 decimals.
     let roundTo2Decimals = (number) => {
-      if (number !== undefined)
+      if (number)
         return Math.round(number * 100) / 100;
     }
 
@@ -239,24 +239,24 @@ const constants = {
 };
 
 export let Dimensions = {
-  convertWeightToMetric: (weight, rounding = 1e5) => {
-    if (weight !== undefined)
-      return Math.round(weight / constants.poundsInKilos * rounding) / rounding;
+  convertWeightToMetric: (number, rounding = 1e5) => {
+    if (number)
+      return Math.round(number / constants.poundsInKilos * rounding) / rounding;
   },
 
-  convertDimensionToMetric: (dimension, rounding = 1e5) => {
-    if (dimension !== undefined)
-      return Math.round(dimension  / constants.feetInMilimeters * rounding) / rounding;
+  convertDimensionToMetric: (number, rounding = 1e5) => {
+    if (number)
+      return Math.round(number  / constants.feetInMilimeters * rounding) / rounding;
   },
 
-  convertWeightToImperial: (weight, rounding = 1e5) => {
-    if (weight !== undefined)
-      return Math.round(weight * constants.poundsInKilos * rounding) / rounding;
+  convertWeightToImperial: (number, rounding = 1e5) => {
+    if (number)
+      return Math.round(number * constants.poundsInKilos * rounding) / rounding;
   },
 
-  convertDimensionToImperial: (dimension, rounding = 1e5) => {
-    if (dimension !== undefined)
-      return Math.round(dimension * constants.feetInMilimeters * rounding) / rounding;
+  convertDimensionToImperial: (number, rounding = 1e5) => {
+    if (number)
+      return Math.round(number * constants.feetInMilimeters * rounding) / rounding;
   },
 
   getInputValues: (parentElement) => {
