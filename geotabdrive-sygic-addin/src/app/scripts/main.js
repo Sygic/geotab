@@ -165,9 +165,9 @@ geotab.addin.sygic = function (api, state) {
       .classList.toggle('hidden');
   }
 
-  function createSygicTruckNavigateToPointUri(lat, lon) {
+  async function createSygicTruckNavigateToPointUri(lat, lon) {
     let baseUri = `com.sygic.aura://coordinate|${lon}|${lat}|drive`;
-    let truckUri = createSygicTruckAttrUrl();
+    let truckUri = await createSygicTruckAttrUrl();
     //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
     //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
@@ -176,7 +176,7 @@ geotab.addin.sygic = function (api, state) {
     return uri;
   }
 
-  function createSygicTruckNavigateToItineraryUri(zonePoints) {
+  async function createSygicTruckNavigateToItineraryUri(zonePoints) {
     let routeImport = {
       version: '3.1',
       directives: {
@@ -205,7 +205,10 @@ geotab.addin.sygic = function (api, state) {
       })
     }
 
-    let dimensions = Dimensions.getInputValues(elAddin);
+    let dimensionsInputs = Dimensions.getInputValues(elAddin);
+    let user = await getUser();
+    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+
     if (dimensions.total_weight) {
       routeImport.vehicleRestrictions.weight = dimensions.total_weight;
     }
@@ -240,9 +243,12 @@ geotab.addin.sygic = function (api, state) {
     return uri;
   }
 
-  function createSygicTruckAttrUrl() {
+  async function createSygicTruckAttrUrl() {
     let uri = '';
-    let dimensions = Dimensions.getInputValues(elAddin);
+    let dimensionsInputs = Dimensions.getInputValues(elAddin);
+    let user = await getUser();
+    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+
     let valueArray = [];
     if (dimensions.total_weight) {
       valueArray.push(`wei=${dimensions.total_weight}`);
@@ -461,9 +467,9 @@ geotab.addin.sygic = function (api, state) {
             zonePoints.push({ lat, lon })
 
             a.setAttribute('href', '#');
-            a.addEventListener('click', (event) => {
+            a.addEventListener('click', async (event) => {
               event.preventDefault();
-              let location = createSygicTruckNavigateToPointUri(lat, lon);
+              let location = await createSygicTruckNavigateToPointUri(lat, lon);
               window.open(location, '_system');
             });
           }
@@ -472,9 +478,9 @@ geotab.addin.sygic = function (api, state) {
             content: state.translate('Open itinerary')
           }, tableHolder);
           itineraryOpenLink.setAttribute('href', '#');
-          itineraryOpenLink.addEventListener('click', (event) => {
+          itineraryOpenLink.addEventListener('click', async (event) => {
             event.preventDefault();
-            let location = createSygicTruckNavigateToItineraryUri(zonePoints);
+            let location = await createSygicTruckNavigateToItineraryUri(zonePoints);
             window.open(location, '_system');
           });
 
