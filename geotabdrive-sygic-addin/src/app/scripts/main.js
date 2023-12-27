@@ -4,7 +4,8 @@ import {
   ApiWrapper,
   Dimensions,
   DimensionsStorage,
-  DimensionsModel
+  DimensionsModel,
+  createSygicTruckAttrUrl
 } from 'sygic-geotab-utils';
 /**
  * @returns {{initialize: Function, focus: Function, blur: Function}}
@@ -167,12 +168,16 @@ geotab.addin.sygic = function (api, state) {
 
   async function createSygicTruckNavigateToPointUri(lat, lon) {
     let baseUri = `com.sygic.aura://coordinate|${lon}|${lat}|drive`;
-    let truckUri = await createSygicTruckAttrUrl();
+
+    let dimensionsInputs = Dimensions.getInputValues(elAddin);
+    let user = await getUser();
+    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+    let truckUri = createSygicTruckAttrUrl(dimensions);
     //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
     //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
     let backUri = '&&&back_button|com.geotab.androidCheckmate';
-    let uri = `${baseUri}${truckUri}${backUri}`;
+    let uri = `${baseUri}&&&${truckUri}${backUri}`;
     return uri;
   }
 
@@ -240,35 +245,6 @@ geotab.addin.sygic = function (api, state) {
       console.log(uri);
     }
 
-    return uri;
-  }
-
-  async function createSygicTruckAttrUrl() {
-    let uri = '';
-    let dimensionsInputs = Dimensions.getInputValues(elAddin);
-    let user = await getUser();
-    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
-
-    let valueArray = [];
-    if (dimensions.total_weight) {
-      valueArray.push(`wei=${dimensions.total_weight}`);
-    }
-    if (dimensions.axle_weight) {
-      valueArray.push(`axw=${dimensions.axle_weight}`);
-    }
-    if (dimensions.total_length) {
-      valueArray.push(`len=${dimensions.total_length}`);
-    }
-    if (dimensions.width) {
-      valueArray.push(`wid=${dimensions.width}`);
-    }
-    if (dimensions.height) {
-      valueArray.push(`hei=${dimensions.height}`);
-    }
-
-    if (valueArray.length > 0) {
-      uri = `&&&truckSettings|${valueArray.join('&')}&rou=tru`;
-    }
     return uri;
   }
 
