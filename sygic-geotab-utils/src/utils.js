@@ -147,24 +147,101 @@ export function ApiWrapper(api) {
   };
 }
 
+export class HazmatModel {
+  constructor({ general, h_class}) {
+    this.general = general;
+    this.h_class = h_class;   // Possible values: 1,2,3,4,5,6,7,8,9,I , values can be combined, e.g. h_class='124'
+  }
+  static getEmpty() {
+    return new HazmatModel({general: false, h_class:""});
+  }
+
+  static getFromStringInputs({general, h_class}) {
+    if (general === undefined)
+    {
+      general = false;
+    }
+    if (h_class === undefined)
+    {
+      h_class = '';
+    }
+    return new HazmatModel({general: general, h_class: h_class});
+  }
+
+  getViewModel(state) {
+    return {
+      general: {
+        value: this.general,
+        label: `${state.translate('General Hazmat')}`,
+      },
+      class1: {
+        value: this.h_class.indexOf('1') > -1,
+        label: `${state.translate('Explosive')} (Class 1)`,
+      },
+      class2: {
+        value: this.h_class.indexOf('2') > -1,
+        label: `${state.translate('Flammable gas')} (Class 2)`,
+      },
+      class3: {
+        value: this.h_class.indexOf('3') > -1,
+        label: `${state.translate('Flammable liquid')} (Class 3)`,
+      },
+      class4: {
+        value: this.h_class.indexOf('4') > -1,
+        label: `${state.translate('Flammable solid')} (Class 4)`,
+      },
+      class5: {
+        value: this.h_class.indexOf('5') > -1,
+        label: `${state.translate('Oxidizer')} (Class 5)`,
+      },
+      class6: {
+        value: this.h_class.indexOf('6') > -1,
+        label: `${state.translate('Poison')} (Class 6)`,
+      },
+      class7: {
+        value: this.h_class.indexOf('7') > -1,
+        label: `${state.translate('Radioactive material')} (Class 7)`,
+      },
+      class8: {
+        value: this.h_class.indexOf('8') > -1,
+        label: `${state.translate('Corrosive material')} (Class 8)`,
+      },
+      class9: {
+        value: this.h_class.indexOf('9') > -1,
+        label: `${state.translate('Miscellaneous')} (Class 9)`,
+      },
+      classI: {
+        value: this.h_class.indexOf('I') > -1,
+        label: `${state.translate('Poison inhalation')} (Class I)`,
+      },
+    }
+  }
+
+} // class
+
 export class DimensionsModel {
-  constructor({ width, height, total_weight, axle_weight, total_length }) {
+  constructor({ width, height, total_weight, axle_weight, total_length, hazmat}) {
     this.width = width;
     this.height = height;
     this.total_length = total_length;
     this.axle_weight = axle_weight;
     this.total_weight = total_weight;
+    if (hazmat === undefined) {
+      this.hazmat = HazmatModel.getEmpty();
+    } else {
+      this.hazmat = hazmat;
+    }
   }
 
   static getEmpty() {
-    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined });
+    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined, undefined });
   }
 
   static getEmptyViewModel(isMetric, state) {
     return new DimensionsModel.getEmpty().getViewModelWithUnits(isMetric, state)
   }
 
-  static getFromStringInputs({ width, height, total_weight, axle_weight, total_length }, isMetric = true) {
+  static getFromStringInputs({ width, height, total_weight, axle_weight, total_length, hazmat }, isMetric = true) {
     width = Number.parseFloat(width);
     height = Number.parseFloat(height);
     total_weight = Number.parseFloat(total_weight);
@@ -178,7 +255,13 @@ export class DimensionsModel {
       total_length = Dimensions.convertDimensionToMetric(total_length);
     }
 
-    const data = { width, height, total_weight, axle_weight, total_length };
+    if (hazmat !== undefined) {
+      hazmat = HazmatModel.getFromStringInputs(hazmat);
+    } else {
+      hazmat = HazmatModel.getEmpty();
+    }
+
+    const data = { width, height, total_weight, axle_weight, total_length, hazmat };
     return new DimensionsModel(data);
   }
 
@@ -228,6 +311,9 @@ export class DimensionsModel {
       total_weight: {
         value: roundTo2Decimals(total_weight),
         label: isMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
+      },
+      hazmat : {
+        value: this.hazmat.getViewModel(state),
       }
     }
   }
@@ -262,12 +348,25 @@ export let Dimensions = {
   getInputValues: (parentElement) => {
     let dimensionsModel = DimensionsModel.getEmpty();
     for (const key in dimensionsModel) {
-      if (dimensionsModel.hasOwnProperty(key) && key !== 'isMetric') {
+      if (dimensionsModel.hasOwnProperty(key) && key !== 'isMetric' && key !== 'hazmat') {
         dimensionsModel[key] = parentElement.querySelector(
-          `input[name=sygic-truck-${key}]`
+          `input[name=sygic-truck-dimensions-${key}]`
         ).value;
       }
     }
+
+    const hazmat_general = parentElement.querySelector('input[name=sygic-truck-hazmat-general]').checked;
+    let hazmat_classes = "";
+    for (const h_class of "123456789I") {
+      const checked = parentElement.querySelector(`input[name=sygic-truck-hazmat-class${h_class}]`).checked;
+      if (checked) {
+        hazmat_classes += h_class;
+      }
+    }
+
+    dimensionsModel.hazmat.general = hazmat_general;
+    dimensionsModel.hazmat.h_class = hazmat_classes;
+
     return dimensionsModel;
   },
 };
@@ -356,6 +455,13 @@ export function createSygicTruckAttrUrl(dimensions) {
   }
   if (dimensions.height) {
     valueArray.push(`hei=${dimensions.height}`);
+  }
+
+  valueArray.push(`general=${dimensions.hazmat.general * 1}`);
+  if (dimensions.hazmat.h_class.length > 0) {
+    valueArray.push(`hClass=${dimensions.hazmat.h_class}`);
+  } else {
+    valueArray.push(`hClass=0`);
   }
 
   if (valueArray.length > 0) {
