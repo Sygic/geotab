@@ -52,17 +52,26 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
                 <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
               </div>
             <%  } %>
-            
         <% }) %>
-        <div id='hazmat-fields'>
+        <div data-name='hazmat-fields'>
             <% _.each(vehicle_hazmat, hazmat => { %>
               <%  let name = 'sygic-truck-hazmat-' + hazmat.key; %>
-              <%  let value = hazmat.value; %>
-              <%  let label = hazmat.label; %>
-              <div class='geotabField'>
-                <label for=<%= name %>><%= label %></label>
-                <input type='checkbox' step=0.1 name=<%= name %> class='geotabFormEditField' <% if (value) { %> checked <% } %> />
-              </div>
+              <% if (hazmat.key === 'adr_tunnel') { %>
+                 <div class='geotabField' <% if (hazmat.hidden) { %> hidden='hidden' <% } %> >
+                  <label for=<%= name %>><%= hazmat.label %></label>
+                  <select name=<%= name %> class='geotabFormEditField' >
+                    <option></option>
+                    <% _.each(hazmat.options, option => { %>
+                      <option value=<%= option %> <% if (hazmat.value === option) { %> selected='selected' <% } %>  ><%= option %></option>
+                    <% }) %>                   
+                  </select>
+                </div>
+              <% } else { %>
+                <div class='geotabField'  <% if (hazmat.hidden) { %> hidden='hidden' <% } %> >
+                  <label for=<%= name %>><%= hazmat.label %></label>
+                  <input type='checkbox' step=0.1 name=<%= name %> class='geotabFormEditField' <% if (hazmat.value) { %> checked <% } %> />
+                </div>
+              <% } %>
             <% }) %>
         </div>
         <button class='geotabButton sygic-vehicle-dimensions-save' ><%= apply_changes %></button>
@@ -122,7 +131,9 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
       let hazmatTemplateObject = Object.keys(viewModel.hazmat.value).map(key => ({
           value: viewModel.hazmat.value[key].value,
           key: key,
-          label: viewModel.hazmat.value[key].label
+          label: viewModel.hazmat.value[key].label,
+          hidden:  viewModel.hazmat.value[key].hidden,
+          options:  viewModel.hazmat.value[key].options,
       }));
 
       let vehicle_groups_string = device.groups.map((c) => c.name).join(', ');

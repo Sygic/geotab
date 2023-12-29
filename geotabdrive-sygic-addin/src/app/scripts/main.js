@@ -122,9 +122,9 @@ geotab.addin.sygic = function (api, state) {
     <% if (obj.hasOwnProperty(key)) { %>
       <%  let dimension_label = obj[key].label; %>
       <%  let value = obj[key].value; %>
-      <label for='sygic-truck-<%= key %>' class='form-input'>
+      <label for='sygic-truck-dimensions-<%= key %>' class='form-input'>
       <%= dimension_label %>
-      <input type='number' step=0.1 name='sygic-truck-<%= key %>' value='<%= value %>' class='form-input' />
+      <input type='number' step=0.1 name='sygic-truck-dimensions-<%= key %>' value='<%= value %>' class='form-input' />
       </label>
   <% }} %>
   `;
@@ -147,6 +147,9 @@ geotab.addin.sygic = function (api, state) {
 
     for (const key in viewModel) {
       const valueObject = viewModel[key];
+      if (key === 'hazmat') {
+        continue;
+      }
       summaryTemplateObject[key] = {
         value: valueObject.value,
         label: valueObject.label,
