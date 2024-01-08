@@ -17,6 +17,17 @@ To run locally run following in respective folders:
 npm install
 npm run serve
 ```
+
+#### Troubleshooting
+If you run into this error:
+```
+node:internal/crypto/hash:68
+  this[kHandle] = new _Hash(algorithm, xofLen);
+```
+Try to apply this environment variable:
+
+Windows: `$env:NODE_OPTIONS="--openssl-legacy-provider yarn dev"`
+
 ## Deployment
 1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version will be used in all addons in step 2.
 2. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.

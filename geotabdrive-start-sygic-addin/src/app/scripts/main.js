@@ -1,3 +1,9 @@
+import {
+  ApiWrapper,
+  DimensionsStorage,
+  createSygicTruckAttrUrl
+} from 'sygic-geotab-utils';
+
 /**
  * @returns {{initialize: Function, focus: Function, blur: Function}}
  */
@@ -6,6 +12,20 @@ geotab.addin.sygic = function (api, state) {
 
   // the root container
   let elAddin = document.getElementById('start-sygic-app');
+
+  let truckSettingsUrl = '';
+  let sygicAppBaseUri = 'com.sygic.aura://'
+
+  let geotabApi = ApiWrapper(api);
+
+  async function loadDimensions(deviceId) {
+    const storage = new DimensionsStorage(geotabApi);
+    const myDimensions = await storage.getDimensionsModelAsync(deviceId);
+    if (myDimensions) {
+      return myDimensions.dimensions;
+    }
+    return undefined;
+  }
 
   return {
     /**
@@ -26,6 +46,13 @@ geotab.addin.sygic = function (api, state) {
 
       if (window.DEBUG) {
         console.log('initialize', arguments);
+      }
+
+      const dimensions = await loadDimensions(freshState.device.id);
+      if (dimensions) {
+        truckSettingsUrl = createSygicTruckAttrUrl(dimensions);
+        let uriElem = document.getElementById('start-sygic-app-uri');
+        uriElem.href = `${sygicAppBaseUri}${truckSettingsUrl}`;
       }
 
       // MUST call initializeCallback when done any setup
@@ -55,7 +82,7 @@ geotab.addin.sygic = function (api, state) {
         }
       }
 
-      window.open('com.sygic.aura://', '_system');
+      window.open(`${sygicAppBaseUri}${truckSettingsUrl}`, '_system');
 
       //show main content
       elAddin.className = elAddin.className.replace('hidden', '').trim();

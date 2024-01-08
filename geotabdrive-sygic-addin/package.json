@@ -73,6 +73,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "react-scripts": "^5.0.1",
     "underscore": "^1.12.0"
   }
 }

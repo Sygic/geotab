@@ -339,3 +339,27 @@ export function DimensionsStorage(geotabApi) {
       })
   };
 }
+
+export function createSygicTruckAttrUrl(dimensions) {
+  let valueArray = [];
+  if (dimensions.total_weight) {
+    valueArray.push(`wei=${dimensions.total_weight}`);
+  }
+  if (dimensions.axle_weight) {
+    valueArray.push(`axw=${dimensions.axle_weight}`);
+  }
+  if (dimensions.total_length) {
+    valueArray.push(`len=${dimensions.total_length}`);
+  }
+  if (dimensions.width) {
+    valueArray.push(`wid=${dimensions.width}`);
+  }
+  if (dimensions.height) {
+    valueArray.push(`hei=${dimensions.height}`);
+  }
+
+  if (valueArray.length > 0) {
+    return `truckSettings|${valueArray.join('&')}&rou=tru`;
+  }
+  return '';
+}
