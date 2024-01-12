@@ -118,23 +118,59 @@ geotab.addin.sygic = function (api, state) {
   })();
 
   let dimensionsFormTemplate = `
-  <% for (const key in obj) { %>
-    <% if (obj.hasOwnProperty(key)) { %>
-      <%  let dimension_label = obj[key].label; %>
-      <%  let value = obj[key].value; %>
+  <% for (const key in dimensions) { %>
+    <% if (dimensions.hasOwnProperty(key)) { %>
+      <%  let dimension_label = dimensions[key].label; %>
+      <%  let value = dimensions[key].value; %>
+      <div class='geotabField'>
       <label for='sygic-truck-dimensions-<%= key %>' class='form-input'>
-      <%= dimension_label %>
-      <input type='number' step=0.1 name='sygic-truck-dimensions-<%= key %>' value='<%= value %>' class='form-input' />
+        <%= dimension_label %>
+        <input type='number' step=0.1 name='sygic-truck-dimensions-<%= key %>' value='<%= value %>' class='form-input' />
       </label>
+      </div>
   <% }} %>
+  
+  <div data-name='hazmat-fields'>
+    <% _.each(hazmats, hazmat => { %>
+      <%  let name = 'sygic-truck-hazmat-' + hazmat.key; %>
+    
+      <div class='geotabField' <% if (hazmat.hidden) { %> hidden='hidden' <% } %>>
+        <% if (hazmat.key === 'adr_tunnel') { %>
+            <label for=<%= name %> ><%= hazmat.label %>
+              <select name=<%= name %> style='float: right'>
+                <option></option>
+                <% _.each(hazmat.options, option => { %>
+                  <option value=<%= option %> <% if (hazmat.value === option) { %> selected='selected' <% } %>  ><%= option %></option>
+                <% }) %>                   
+              </select>
+            </label>
+        <% } else { %>
+            <label for=<%= name %> class='form-input'><%= hazmat.label %>
+              <input type='checkbox' step=0.1 name=<%= name %> class='sygic-checkbox' <% if (hazmat.value) { %> checked <% } style="text-align:center; vertical-align:middle" %> />
+            </label>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
   `;
+
   let dimensionsDataTemplate = `
-  <% for (const key in obj) { %>
-    <% if (obj.hasOwnProperty(key)) { %>
-      <%  let dimension_label = obj[key].label; %>
-      <%  let value = obj[key].value; %>
+  <% for (const key in dimensions) { %>
+    <% if (dimensions.hasOwnProperty(key)) { %>
+      <%  let dimension_label = dimensions[key].label; %>
+      <%  let value = dimensions[key].value; %>
     <tr><th><%= dimension_label %></th><td><%= value %></td></tr> 
   <% }} %>
+  
+  <% _.each(hazmats, hazmat => { %>
+    <% if (!hazmat.hidden) { %>
+      <% if (hazmat.key === 'adr_tunnel') { %>
+        <tr><th><%= hazmat.label %></th><td><%=  hazmat.value %></td></tr> 
+      <% } else { %>
+        <tr><th><%= hazmat.label %></th><td> <% if (hazmat.value) { %>On<% } else { %>Off<% } %> </td></tr> 
+      <% } %>
+    <% } %>
+  <% }) %>
   `;
 
   // the root container
@@ -143,23 +179,31 @@ geotab.addin.sygic = function (api, state) {
   function showDimensions(viewModel) {
     let summaryTemplate = _.template(dimensionsDataTemplate);
     let formTemplate = _.template(dimensionsFormTemplate);
-    let summaryTemplateObject = {};
+    let summaryDimensionsTemplateObject = {};
 
     for (const key in viewModel) {
       const valueObject = viewModel[key];
       if (key === 'hazmat') {
         continue;
       }
-      summaryTemplateObject[key] = {
+      summaryDimensionsTemplateObject[key] = {
         value: valueObject.value,
         label: valueObject.label,
       };
     }
 
+    let hazmatTemplateObject = Object.keys(viewModel.hazmat.value).map(key => ({
+      value: viewModel.hazmat.value[key].value,
+      key: key,
+      label: viewModel.hazmat.value[key].label,
+      hidden:  viewModel.hazmat.value[key].hidden,
+      options:  viewModel.hazmat.value[key].options,
+    }));
+
     document.getElementById('sygic-dimensions-summary-content').innerHTML =
-      summaryTemplate(summaryTemplateObject);
+      summaryTemplate({dimensions: summaryDimensionsTemplateObject, hazmats: hazmatTemplateObject});
     document.getElementById('sygic-dimensions-form-content').innerHTML =
-      formTemplate(summaryTemplateObject);
+      formTemplate({dimensions: summaryDimensionsTemplateObject, hazmats: hazmatTemplateObject});
   }
 
   function toggleDimensionsBox() {
