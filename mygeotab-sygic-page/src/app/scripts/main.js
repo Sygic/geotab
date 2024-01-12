@@ -57,7 +57,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
             <% _.each(vehicle_hazmat, hazmat => { %>
               <%  let name = 'sygic-truck-hazmat-' + hazmat.key; %>
               <% if (hazmat.key === 'adr_tunnel') { %>
-                 <div class='geotabField' <% if (hazmat.hidden) { %> hidden='hidden' <% } %> >
+                 <div class='geotabField' <% if (!hazmat.visible) { %> hidden='hidden' <% } %> >
                   <label for=<%= name %>><%= hazmat.label %></label>
                   <select name=<%= name %> class='geotabFormEditField' >
                     <option></option>
@@ -67,7 +67,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
                   </select>
                 </div>
               <% } else { %>
-                <div class='geotabField'  <% if (hazmat.hidden) { %> hidden='hidden' <% } %> >
+                <div class='geotabField'  <% if (!hazmat.visible) { %> hidden='hidden' <% } %> >
                   <label for=<%= name %>><%= hazmat.label %></label>
                   <input type='checkbox' step=0.1 name=<%= name %> class='geotabFormEditField' <% if (hazmat.value) { %> checked <% } %> />
                 </div>
@@ -134,7 +134,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
           value: viewModel.hazmat.value[key].value,
           key: key,
           label: viewModel.hazmat.value[key].label,
-          hidden:  viewModel.hazmat.value[key].hidden,
+          visible:  viewModel.hazmat.value[key].visible,
           options:  viewModel.hazmat.value[key].options,
       }));
 

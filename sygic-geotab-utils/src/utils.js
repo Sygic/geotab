@@ -168,75 +168,79 @@ export class HazmatModel {
     return new HazmatModel({general: general, h_class: h_class, adr_tunnel: adr_tunnel, water: water});
   }
 
+  containsHClass(classId) {
+    return this.h_class.indexOf(classId) > -1
+  }
+
   getViewModel(isMetric, state) {
     return {
       // EU
       general: {
         value: this.general,
         label: `${state.translate('General Hazmat')}`,
-        hidden: !isMetric,
+        visible: isMetric || this.general,
       },
       water: {
         value: this.water,
         label: `${state.translate('Harmful to water')}`,
-        hidden: !isMetric,
+        visible: isMetric || this.water,
       },
       adr_tunnel: {
         value: this.adr_tunnel,
         label: `${state.translate('ADR tunnel')}`,
-        hidden: !isMetric,
+        visible: isMetric || this.adr_tunnel,
         options: ['B', 'C', 'D', 'E']
       },
       // USA
       class1: {
-        value: this.h_class.indexOf('1') > -1,
+        value: this.containsHClass('1'),
         label: `${state.translate('Explosive')} (Class 1)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('1'),
       },
       class2: {
-        value: this.h_class.indexOf('2') > -1,
+        value: this.containsHClass('2'),
         label: `${state.translate('Flammable gas')} (Class 2)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('2'),
       },
       class3: {
-        value: this.h_class.indexOf('3') > -1,
+        value: this.containsHClass('3'),
         label: `${state.translate('Flammable liquid')} (Class 3)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('3'),
       },
       class4: {
-        value: this.h_class.indexOf('4') > -1,
+        value: this.containsHClass('4'),
         label: `${state.translate('Flammable solid')} (Class 4)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('4'),
       },
       class5: {
-        value: this.h_class.indexOf('5') > -1,
+        value: this.containsHClass('5'),
         label: `${state.translate('Oxidizer')} (Class 5)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('5'),
       },
       class6: {
-        value: this.h_class.indexOf('6') > -1,
+        value: this.containsHClass('6'),
         label: `${state.translate('Poison')} (Class 6)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('6'),
       },
       class7: {
-        value: this.h_class.indexOf('7') > -1,
+        value: this.containsHClass('7'),
         label: `${state.translate('Radioactive material')} (Class 7)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('7'),
       },
       class8: {
-        value: this.h_class.indexOf('8') > -1,
+        value: this.containsHClass('8'),
         label: `${state.translate('Corrosive material')} (Class 8)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('8'),
       },
       class9: {
-        value: this.h_class.indexOf('9') > -1,
+        value: this.containsHClass('9'),
         label: `${state.translate('Miscellaneous')} (Class 9)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('9'),
       },
       classI: {
-        value: this.h_class.indexOf('I') > -1,
+        value: this.containsHClass('I'),
         label: `${state.translate('Poison inhalation')} (Class I)`,
-        hidden: isMetric,
+        visible: !isMetric || this.containsHClass('I'),
       },
     }
   }
@@ -493,6 +497,7 @@ export function DimensionsStorage(geotabApi) {
 }
 
 export function createSygicTruckAttrUrl(dimensions) {
+  // https://www.sygic.com/sk/developers/professional-navigation-sdk/android/api-examples/custom-url
   let valueArray = [];
   if (dimensions.total_weight) {
     valueArray.push(`wei=${dimensions.total_weight}`);

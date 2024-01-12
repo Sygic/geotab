@@ -134,7 +134,7 @@ geotab.addin.sygic = function (api, state) {
     <% _.each(hazmats, hazmat => { %>
       <%  let name = 'sygic-truck-hazmat-' + hazmat.key; %>
     
-      <div class='geotabField' <% if (hazmat.hidden) { %> hidden='hidden' <% } %>>
+      <div class='geotabField' <% if (!hazmat.visible) { %> hidden='hidden' <% } %>>
         <% if (hazmat.key === 'adr_tunnel') { %>
             <label for=<%= name %> ><%= hazmat.label %>
               <select name=<%= name %> style='float: right'>
@@ -163,7 +163,7 @@ geotab.addin.sygic = function (api, state) {
   <% }} %>
   
   <% _.each(hazmats, hazmat => { %>
-    <% if (!hazmat.hidden) { %>
+    <% if (hazmat.visible) { %>
       <% if (hazmat.key === 'adr_tunnel') { %>
         <tr><th><%= hazmat.label %></th><td><%=  hazmat.value %></td></tr> 
       <% } else { %>
@@ -196,7 +196,7 @@ geotab.addin.sygic = function (api, state) {
       value: viewModel.hazmat.value[key].value,
       key: key,
       label: viewModel.hazmat.value[key].label,
-      hidden:  viewModel.hazmat.value[key].hidden,
+      visible:  viewModel.hazmat.value[key].visible,
       options:  viewModel.hazmat.value[key].options,
     }));
 
