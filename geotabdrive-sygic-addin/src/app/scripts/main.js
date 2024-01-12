@@ -188,7 +188,6 @@ geotab.addin.sygic = function (api, state) {
         vehicleType: 'truck',
         routeComputeType: 'truck',
       },
-      vehicleRestrictions: {},
       routeParts: []
     };
 
@@ -213,33 +212,13 @@ geotab.addin.sygic = function (api, state) {
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
     let user = await getUser();
     const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+    const truckSettingsUri = createSygicTruckAttrUrl(dimensions);
 
-    if (dimensions.total_weight) {
-      routeImport.vehicleRestrictions.weight = dimensions.total_weight;
-    }
-    if (dimensions.axle_weight) {
-      //TODO: co tu?
-    }
-    if (dimensions.total_length) {
-      routeImport.vehicleRestrictions.totalLength = dimensions.total_length;
-    }
-    if (dimensions.width) {
-      routeImport.vehicleRestrictions.width = dimensions.width;
-    }
-    if (dimensions.height) {
-      routeImport.vehicleRestrictions.height = dimensions.height;
-    }
+    let baseUri = 'com.sygic.aura://';
+    let routeImportUri = `routeimport|${encodeURIComponent(JSON.stringify(routeImport))}`;
+    let backButtonUri = 'back_button|com.geotab.androidCheckmate';
 
-    if (window.DEBUG) {
-      console.log(routeImport);
-    }
-
-    let baseUri = 'com.sygic.aura://routeimport|';
-    let truckUri = `${encodeURIComponent(JSON.stringify(routeImport))}`;
-    // let backUri = '';
-    let backUri = '&&&back_button|com.geotab.androidCheckmate';
-
-    let uri = `${baseUri}${truckUri}${backUri}`;
+    let uri = `${baseUri}${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
 
     if (window.DEBUG) {
       console.log(uri);
