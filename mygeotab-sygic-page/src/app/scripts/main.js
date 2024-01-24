@@ -43,14 +43,37 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
     <div class='g-row hidden sygic-vehicle-dimensions-form'>
       <fieldset class='geotabFieldset sygic-vehicle-dimensions-fieldset' style='background-color: transparent'>
         <% _.each(vehicle_dimensions, dimension => { %>
-            <%  let name = 'sygic-truck-' + dimension.key; %>
-            <%  let value = dimension.value; %>
-            <%  let label = dimension.label; %>
-          <div class='geotabField'>
-            <label for=<%= name %>><%= label %></label>
-            <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
-          </div>
+            <%  if (dimension.key != 'hazmat') { %>
+              <%  let name = 'sygic-truck-dimensions-' + dimension.key; %>
+              <%  let value = dimension.value; %>
+              <%  let label = dimension.label; %>
+              <div class='geotabField'>
+                <label for=<%= name %>><%= label %></label>
+                <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
+              </div>
+            <%  } %>
         <% }) %>
+        <div data-name='hazmat-fields'>
+            <% _.each(vehicle_hazmat, hazmat => { %>
+              <%  let name = 'sygic-truck-hazmat-' + hazmat.key; %>
+              <% if (hazmat.key === 'adr_tunnel') { %>
+                 <div class='geotabField' <% if (!hazmat.visible) { %> hidden='hidden' <% } %> >
+                  <label for=<%= name %>><%= hazmat.label %></label>
+                  <select name=<%= name %> class='geotabFormEditField' >
+                    <option></option>
+                    <% _.each(hazmat.options, option => { %>
+                      <option value=<%= option %> <% if (hazmat.value === option) { %> selected='selected' <% } %>  ><%= option %></option>
+                    <% }) %>                   
+                  </select>
+                </div>
+              <% } else { %>
+                <div class='geotabField'  <% if (!hazmat.visible) { %> hidden='hidden' <% } %> >
+                  <label for=<%= name %>><%= hazmat.label %></label>
+                  <input type='checkbox' step=0.1 name=<%= name %> class='geotabFormEditField' <% if (hazmat.value) { %> checked <% } %> />
+                </div>
+              <% } %>
+            <% }) %>
+        </div>
         <button class='geotabButton sygic-vehicle-dimensions-save' ><%= apply_changes %></button>
       </fieldset>
     </div>
@@ -66,8 +89,10 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
     for (const key in viewModel) {
       if (viewModel.hasOwnProperty(key)) {
         const model = viewModel[key];
-        if (iterator++ > 0) dimensionDetailsString += ', ';
-        dimensionDetailsString += `${model.label}: ${model.value}`;
+        if (model.value !== undefined && typeof model.value !== 'object') {
+          if (iterator++ > 0) dimensionDetailsString += ', ';
+          dimensionDetailsString += `${model.label}: ${model.value}`;
+        }
       }
     }
     return dimensionDetailsString;
@@ -94,11 +119,23 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
         dimensionDetailsString = 'Dimensions unset';
       }
 
+      let dimensionsTemplateObject = Object.keys(viewModel).map(key => {
+        if (key !== 'hazmat') {
+          return {
+            value: viewModel[key].value,
+            key: key,
+            label: viewModel[key].label,
+          };
+        }
+        return null;
+      }).filter(Boolean);
 
-      let dimensionsTemplateObject = Object.keys(viewModel).map(key => ({
-        value: viewModel[key].value,
-        key: key,
-        label: viewModel[key].label
+      let hazmatTemplateObject = Object.keys(viewModel.hazmat.value).map(key => ({
+          value: viewModel.hazmat.value[key].value,
+          key: key,
+          label: viewModel.hazmat.value[key].label,
+          visible:  viewModel.hazmat.value[key].visible,
+          options:  viewModel.hazmat.value[key].options,
       }));
 
       let vehicle_groups_string = device.groups.map((c) => c.name).join(', ');
@@ -107,6 +144,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
         vehicle_dimensions_string: dimensionDetailsString,
         vehicle_groups_string: vehicle_groups_string,
         vehicle_dimensions: dimensionsTemplateObject,
+        vehicle_hazmat: hazmatTemplateObject,
         user: user,
         apply_changes: state.translate('Apply Changes'),
       });

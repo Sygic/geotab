@@ -32,6 +32,24 @@
     padding: 16px;
 }
 
+.sygic-checkbox {
+    float: right;
+    height:1em;
+    width: 1em;
+}
+
+.geotabField {
+    border-radius: 0.4em;
+    margin: 4px 0;
+    padding: 0.5em 2%;
+    float: left;
+    width: 94%
+}
+
+.geotabField:hover:not(.alert-error) {
+    background-color: #f4f4f4
+}
+
 /*
 
 //THIS IS COPIED FROM HERE: https://github.com/Geotab/sdk/blob/master/src/software/js-samples/css/geotab.css
