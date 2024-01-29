@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import {PolyUtil} from 'node-geometry-library';
 import {
   User,
   ApiWrapper,
@@ -7,6 +8,7 @@ import {
   DimensionsModel,
   createSygicTruckAttrUrl
 } from 'sygic-geotab-utils';
+
 /**
  * @returns {{initialize: Function, focus: Function, blur: Function}}
  */
@@ -229,40 +231,14 @@ geotab.addin.sygic = function (api, state) {
   }
 
   async function createSygicTruckNavigateToItineraryUri(zonePoints) {
-    let routeImport = {
-      version: '3.1',
-      directives: {
-        vehicleType: 'truck',
-        routeComputeType: 'truck',
-      },
-      routeParts: []
-    };
-
-    for (let index = 0; index < zonePoints.length - 1; index++) {
-      const fromPoint = zonePoints[index];
-      const toPoint = zonePoints[index + 1];
-      const toWaypointType = index + 1 == zonePoints.length - 1 ? 'finish' : 'via';
-      routeImport.routeParts.push({
-        waypointFrom: {
-          lat: fromPoint.lat,
-          lon: fromPoint.lon,
-          type: 'via'
-        },
-        waypointTo: {
-          lat: toPoint.lat,
-          lon: toPoint.lon,
-          type: toWaypointType
-        }
-      })
-    }
-
+    let waypointsPolyline = PolyUtil.encode(zonePoints);
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
     let user = await getUser();
     const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
     const truckSettingsUri = createSygicTruckAttrUrl(dimensions);
 
     let baseUri = 'com.sygic.aura://';
-    let routeImportUri = `routeimport|${encodeURIComponent(JSON.stringify(routeImport))}`;
+    let routeImportUri = `routeimport|${waypointsPolyline}|gwp`;
     let backButtonUri = 'back_button|com.geotab.androidCheckmate';
 
     let uri = `${baseUri}${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
@@ -465,8 +441,8 @@ geotab.addin.sygic = function (api, state) {
             let center = calculateCenter(pts);
 
             let lat = center[0];
-            let lon = center[1];
-            zonePoints.push({ lat, lon })
+            let lng = center[1];
+            zonePoints.push({ lat, lng })
 
             a.setAttribute('href', '#');
             a.addEventListener('click', async (event) => {
