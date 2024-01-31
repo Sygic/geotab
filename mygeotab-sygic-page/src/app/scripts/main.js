@@ -89,7 +89,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
     for (const key in viewModel) {
       if (viewModel.hasOwnProperty(key)) {
         const model = viewModel[key];
-        if (model.value !== undefined && typeof model.value !== 'object') {
+        if (model.value !== undefined && typeof model.value !== 'object' && !isNaN(model.value)) {
           if (iterator++ > 0) dimensionDetailsString += ', ';
           dimensionDetailsString += `${model.label}: ${model.value}`;
         }

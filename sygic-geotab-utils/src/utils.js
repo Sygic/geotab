@@ -263,7 +263,7 @@ export class DimensionsModel {
   }
 
   static getEmpty() {
-    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined, undefined });
+    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined, undefined, undefined });
   }
 
   static getEmptyViewModel(isMetric, state) {
@@ -283,7 +283,7 @@ export class DimensionsModel {
       total_weight = Dimensions.convertWeightToMetric(total_weight);
       axle_weight = Dimensions.convertWeightToMetric(axle_weight);
       total_length = Dimensions.convertDimensionToMetric(total_length);
-      max_speed = Dimensions.convertDimensionToMetric(max_speed);
+      max_speed = Dimensions.convertSpeedToMetric(max_speed);
     }
 
     if (hazmat !== undefined) {
@@ -292,7 +292,7 @@ export class DimensionsModel {
       hazmat = HazmatModel.getEmpty();
     }
 
-    const data = { width, height, total_weight, axle_weight, total_length, hazmat };
+    const data = { width, height, total_weight, axle_weight, total_length, max_speed, hazmat };
     return new DimensionsModel(data);
   }
 
@@ -316,13 +316,18 @@ export class DimensionsModel {
       total_length = Dimensions.convertDimensionToImperial(this.total_length);
       axle_weight = Dimensions.convertWeightToImperial(this.axle_weight);
       total_weight = Dimensions.convertWeightToImperial(this.total_weight);
-      max_speed = Dimensions.convertDimensionToMetric(this.max_speed);
+      max_speed = Dimensions.convertSpeedToImperial(this.max_speed);
     }
 
     // numbers are stored with 5 decimals. Displayed and used when parsing inputs with 2 decimals.
     let roundTo2Decimals = (number) => {
       if (number)
         return Math.round(number * 100) / 100;
+    }
+
+    let roundToDecimals = (number) => {
+      if (number)
+        return Math.round(number);
     }
 
     return {
@@ -347,7 +352,7 @@ export class DimensionsModel {
         label: isMetric ? `${state.translate('Total weight')} (kg)` : `${state.translate('Total weight')} (lb)`
       },
       max_speed: {
-        value: roundTo2Decimals(max_speed),
+        value: roundToDecimals(max_speed),
         label: isMetric ? `${state.translate('Max speed')} (km/h)` : `${state.translate('Max speed')} (mph)`
       },
       hazmat : {
