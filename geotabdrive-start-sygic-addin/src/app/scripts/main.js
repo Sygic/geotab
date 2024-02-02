@@ -52,7 +52,8 @@ geotab.addin.sygic = function (api, state) {
       if (dimensions) {
         truckSettingsUrl = createSygicTruckAttrUrl(dimensions);
         let uriElem = document.getElementById('start-sygic-app-uri');
-        uriElem.href = `${sygicAppBaseUri}${truckSettingsUrl}`;
+        const backButtonUrl = 'back_button|com.geotab.androidCheckmate';
+        uriElem.href = `${sygicAppBaseUri}${truckSettingsUrl}&&&${backButtonUrl}`;
       }
 
       // MUST call initializeCallback when done any setup

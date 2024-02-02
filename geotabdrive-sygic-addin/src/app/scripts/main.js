@@ -216,7 +216,8 @@ geotab.addin.sygic = function (api, state) {
   }
 
   async function createSygicTruckNavigateToPointUri(lat, lon) {
-    let baseUri = `com.sygic.aura://coordinate|${lon}|${lat}|drive`;
+    let baseUri = 'com.sygic.aura://';
+    let navigationUri = `coordinate|${lon}|${lat}|drive`;
 
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
     let user = await getUser();
@@ -225,8 +226,8 @@ geotab.addin.sygic = function (api, state) {
     //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
     //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
-    let backUri = '&&&back_button|com.geotab.androidCheckmate';
-    let uri = `${baseUri}&&&${truckUri}${backUri}`;
+    let backUri = 'back_button|com.geotab.androidCheckmate';
+    let uri = `${baseUri}${truckUri}&&&${navigationUri}&&&${backUri}`;
     return uri;
   }
 
