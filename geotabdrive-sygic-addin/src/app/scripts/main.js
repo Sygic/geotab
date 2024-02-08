@@ -602,6 +602,14 @@ geotab.addin.sygic = function (api, state) {
           await saveDimensions(freshState.device.id, addonUser.isMetric);
         });
 
+      document
+        .getElementById('sygic-update-maps')
+        .addEventListener('click', async function (event) {
+          event.preventDefault();
+          let location = 'com.sygic.aura://update|all';
+          window.open(location, '_system');
+        });
+
       // MUST call initializeCallback when done any setup
       initializeCallback();
     },

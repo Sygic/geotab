@@ -50,6 +50,10 @@
     background-color: #f4f4f4
 }
 
+.panel {
+    padding-bottom: 0 !important;
+}
+
 /*
 
 //THIS IS COPIED FROM HERE: https://github.com/Geotab/sdk/blob/master/src/software/js-samples/css/geotab.css
