@@ -248,7 +248,8 @@ export class HazmatModel {
 } // class
 
 export class DimensionsModel {
-  constructor({ width, height, total_weight, axle_weight, total_length, max_speed, hazmat}) {
+  constructor({ routing_type, width, height, total_weight, axle_weight, total_length, max_speed, hazmat}) {
+    this.routing_type = routing_type === undefined ? 'tru': routing_type;
     this.width = width;
     this.height = height;
     this.total_length = total_length;
@@ -263,14 +264,14 @@ export class DimensionsModel {
   }
 
   static getEmpty() {
-    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined, undefined, undefined });
+    return new DimensionsModel({ undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined });
   }
 
   static getEmptyViewModel(isMetric, state) {
     return new DimensionsModel.getEmpty().getViewModelWithUnits(isMetric, state)
   }
 
-  static getFromStringInputs({ width, height, total_weight, axle_weight, total_length, max_speed, hazmat }, isMetric = true) {
+  static getFromStringInputs({ routing_type, width, height, total_weight, axle_weight, total_length, max_speed, hazmat }, isMetric = true) {
     width = Number.parseFloat(width);
     height = Number.parseFloat(height);
     total_weight = Number.parseFloat(total_weight);
@@ -292,8 +293,23 @@ export class DimensionsModel {
       hazmat = HazmatModel.getEmpty();
     }
 
-    const data = { width, height, total_weight, axle_weight, total_length, max_speed, hazmat };
+    const data = { routing_type, width, height, total_weight, axle_weight, total_length, max_speed, hazmat };
     return new DimensionsModel(data);
+  }
+
+  static getRoutingTypeString(routing_type, state)
+  {
+    if (routing_type === 'tru') {
+      return `${state.translate('Truck')}`;
+    } else if (routing_type === 'van') {
+      return `${state.translate('Van')}`;
+    } else if (routing_type === 'car') {
+      return `${state.translate('Car')}`;
+    } else if (routing_type === 'cmp') {
+      return `${state.translate('Camper')}`;
+    } else if (routing_type === 'bus') {
+      return `${state.translate('Bus')}`;
+    }
   }
 
   getViewModelWithUnits(isMetric, state) {
@@ -331,6 +347,17 @@ export class DimensionsModel {
     }
 
     return {
+      routing_type: {
+        value: this.routing_type,
+        label: `${state.translate('Vehicle type')}`,
+        options: {
+          'tru': DimensionsModel.getRoutingTypeString('tru', state),
+          'van': DimensionsModel.getRoutingTypeString('van', state),
+          'bus': DimensionsModel.getRoutingTypeString('bus', state),
+          'car': DimensionsModel.getRoutingTypeString('car', state),
+          'cmp': DimensionsModel.getRoutingTypeString('cmp', state)
+        }
+      },
       width: {
         value: roundTo2Decimals(width),
         label: isMetric ? `${state.translate('Width')} (mm)` : `${state.translate('Width')} (ft)`
@@ -403,9 +430,11 @@ export let Dimensions = {
     let dimensionsModel = DimensionsModel.getEmpty();
     for (const key in dimensionsModel) {
       if (dimensionsModel.hasOwnProperty(key) && key !== 'isMetric' && key !== 'hazmat') {
-        dimensionsModel[key] = parentElement.querySelector(
-          `input[name=sygic-truck-dimensions-${key}]`
-        ).value;
+        let inputElement = parentElement.querySelector(`input[name=sygic-truck-dimensions-${key}]`)
+        if (!inputElement) {
+          inputElement = parentElement.querySelector(`select[name=sygic-truck-dimensions-${key}]`)
+        }
+        dimensionsModel[key] = inputElement.value;
       }
     }
 
@@ -504,6 +533,9 @@ export function DimensionsStorage(geotabApi) {
 export function createSygicTruckAttrUrl(dimensions) {
   // https://www.sygic.com/sk/developers/professional-navigation-sdk/android/api-examples/custom-url
   let valueArray = [];
+  if (dimensions.routing_type) {
+    valueArray.push(`rou=${dimensions.routing_type}`);
+  }
   if (dimensions.total_weight) {
     valueArray.push(`wei=${dimensions.total_weight}`);
   }

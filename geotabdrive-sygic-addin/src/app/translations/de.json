@@ -1,4 +1,10 @@
 ﻿{
+  "Vehicle type": "Fahrzeugtyp",
+  "Truck": "LKW",
+  "Van": "Transporter",
+  "Car": "PKW",
+  "Bus": "Bus",
+  "Camper": "Wohnmobil",
   "Width": "Breite",
   "Height": "Höhe",
   "Apply Changes": "Änderungen übernehmen",

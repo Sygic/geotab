@@ -47,10 +47,22 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
               <%  let name = 'sygic-truck-dimensions-' + dimension.key; %>
               <%  let value = dimension.value; %>
               <%  let label = dimension.label; %>
-              <div class='geotabField'>
-                <label for=<%= name %>><%= label %></label>
-                <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
-              </div>
+              <%  let options = dimension.options; %>
+              <% if (options) { %>
+               <div class='geotabField'>
+                  <label for=<%= name %>><%= label %></label>
+                  <select name=<%= name %> class='geotabFormEditField' >
+                    <% _.each(options, (option, key)  => { %>
+                      <option value=<%= key %> <% if (value === key) { %> selected='selected' <% } %>  ><%= option %></option>
+                    <% }) %>                   
+                  </select>
+               </div>
+              <% } else { %>
+                <div class='geotabField'>
+                  <label for=<%= name %>><%= label %></label>
+                  <input type='number' step=0.1 name=<%= name %> class='geotabFormEditField' value=<%= value %> />
+                </div>
+              <% } %>
             <%  } %>
         <% }) %>
         <div data-name='hazmat-fields'>
@@ -89,9 +101,13 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
     for (const key in viewModel) {
       if (viewModel.hasOwnProperty(key)) {
         const model = viewModel[key];
-        if (model.value !== undefined && typeof model.value !== 'object' && !isNaN(model.value)) {
+        if (typeof model.value === 'number' || typeof model.value === 'string') {
           if (iterator++ > 0) dimensionDetailsString += ', ';
-          dimensionDetailsString += `${model.label}: ${model.value}`;
+          if (key === 'routing_type') {
+            dimensionDetailsString += `${model.label}: ${DimensionsModel.getRoutingTypeString(model.value, state)}`;
+          } else {
+            dimensionDetailsString += `${model.label}: ${model.value}`;
+          }
         }
       }
     }
@@ -125,6 +141,7 @@ geotab.addin.mygeotabSygicPage = function (api, state) {
             value: viewModel[key].value,
             key: key,
             label: viewModel[key].label,
+            options: viewModel[key].options,
           };
         }
         return null;

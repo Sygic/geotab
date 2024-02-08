@@ -1,4 +1,10 @@
 ﻿{
+  "Vehicle type": "Tipo di veicolo",
+  "Truck": "Camion",
+  "Van": "Furgone",
+  "Car": "Auto",
+  "Bus": "Autobus",
+  "Camper": "Camper",
   "Width": "Larghezza",
   "Height": "Altezza",
   "Apply Changes": "Applica i cambiamenti",

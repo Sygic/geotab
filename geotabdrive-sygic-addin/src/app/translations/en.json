@@ -1,4 +1,10 @@
 {
+    "Vehicle type": "Vehicle type",
+    "Truck": "Truck",
+    "Van": "Van",
+    "Car": "Car",
+    "Bus": "Bus",
+    "Camper": "Camper",
     "Width": "Width",
     "Height": "Height",
     "Apply Changes": "Apply Changes",

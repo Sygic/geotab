@@ -124,12 +124,25 @@ geotab.addin.sygic = function (api, state) {
     <% if (dimensions.hasOwnProperty(key)) { %>
       <%  let dimension_label = dimensions[key].label; %>
       <%  let value = dimensions[key].value; %>
-      <div class='geotabField'>
-      <label for='sygic-truck-dimensions-<%= key %>' class='form-input'>
-        <%= dimension_label %>
-        <input type='number' step=0.1 name='sygic-truck-dimensions-<%= key %>' value='<%= value %>' class='form-input' />
-      </label>
-      </div>
+      <%  let options = dimensions[key].options; %>
+      <% if (options) { %>
+        <div class='geotabField'>
+          <label for='sygic-truck-dimensions-<%= key %>'> <%= dimension_label %>
+            <select name='sygic-truck-dimensions-<%= key %>' style='float:right'>
+              <% _.each(options, (option, key) => { %>
+                <option value=<%= key %> <% if (value === key) { %> selected='selected' <% } %>  ><%= option %></option>
+              <% }) %>                   
+            </select>
+           </label>
+        </div>
+      <% } else { %>
+        <div class='geotabField'>
+        <label for='sygic-truck-dimensions-<%= key %>' class='form-input'>
+          <%= dimension_label %>
+          <input type='number' step=0.1 name='sygic-truck-dimensions-<%= key %>' value='<%= value %>' class='form-input' />
+        </label>
+        </div>
+      <% } %>
   <% }} %>
   
   <div data-name='hazmat-fields'>
@@ -161,7 +174,15 @@ geotab.addin.sygic = function (api, state) {
     <% if (dimensions.hasOwnProperty(key)) { %>
       <%  let dimension_label = dimensions[key].label; %>
       <%  let value = dimensions[key].value; %>
-    <tr><th><%= dimension_label %></th><td><%= value %></td></tr> 
+      <%  let options = dimensions[key].options; %>
+      
+      <tr><th><%= dimension_label %></th><td>
+        <% if (options) { %>
+         <%= options[value] %>
+        <% } else { %>
+          <%= value %>
+        <% } %>
+      </td></tr> 
   <% }} %>
   
   <% _.each(hazmats, hazmat => { %>
@@ -191,6 +212,7 @@ geotab.addin.sygic = function (api, state) {
       summaryDimensionsTemplateObject[key] = {
         value: valueObject.value,
         label: valueObject.label,
+        options: valueObject.options,
       };
     }
 
