@@ -8,12 +8,12 @@
       "url": "sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
-        "en": "Sygic Truck Settings",
-        "de": "Sygic Truck Einstellungen",
-        "es": "Configuración Sygic Truck",
-        "fr": "Paramètres Sygic Truck",
-        "it": "Sygic Truck Impostazioni",
-        "pl": "Ustawienia Sygic Truck"
+        "en": "Sygic Professional Navigation",
+        "de": "Professionelle Sygic Navigation",
+        "es": "Navegación profesional Sygic",
+        "fr": "Navigation professionnelle Sygic",
+        "it": "Navigazione Sygic Professional",
+        "pl": "Profesjonalna nawigacja Sygic"
       },
       "icon": "images/icon.svg"
     }

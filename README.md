@@ -36,7 +36,7 @@ npm run build
 ```
 3. The _version_ from step 1 is updated in all addons' respective package.json files. [geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json)
 4. Build script from step 3 will create two files:
-    1. a combined config [dist/latest/truck-settings-config.json](dist/latest/truck-settings-config.json) for geotabdrive and mygeotab _Sygic Truck Settings_ addins.
+    1. a combined config [dist/latest/truck-settings-config.json](dist/latest/truck-settings-config.json) for geotabdrive and mygeotab addins.
     2. single config [dist/latest/start-sygic-config.json](dist/latest/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
     3. tagged release config versions in [dist/1.2.3/start-sygic-config.json](dist/1.2.3/start-sygic-config.json) and [dist/1.2.3/truck-settings-config.json](dist/1.2.3/truck-settings-config.json)
 5. Push to github. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.2.3_).
