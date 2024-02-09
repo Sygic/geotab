@@ -1,7 +1,7 @@
 {
   "name": "geotab",
   "description": "Clone repository. Navigate in respective addon directory ([geotabdrive-sygic-addin](geotabdrive-sygic-addin) or [mygeotab-sygic-page](mygeotab-sygic-page) or [geotabdrive-start-sygic-addin](geotabdrive-start-sygic-addin))",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "index.js",
   "scripts": {
     "prebuild": "node update-versions.js",
