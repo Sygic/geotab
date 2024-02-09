@@ -565,7 +565,7 @@ export function createSygicTruckAttrUrl(dimensions) {
   }
 
   if (valueArray.length > 0) {
-    return `truckSettings|${valueArray.join('&')}&rou=tru`;
+    return `truckSettings|${valueArray.join('&')}`;
   }
   return '';
 }
