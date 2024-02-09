@@ -14,6 +14,7 @@ geotab.addin.sygic = function (api, state) {
   let elAddin = document.getElementById('start-sygic-app');
 
   let truckSettingsUrl = '';
+  const backButtonUrl = 'back_button|com.geotab.androidCheckmate';
   let sygicAppBaseUri = 'com.sygic.aura://'
 
   let geotabApi = ApiWrapper(api);
@@ -52,7 +53,6 @@ geotab.addin.sygic = function (api, state) {
       if (dimensions) {
         truckSettingsUrl = createSygicTruckAttrUrl(dimensions);
         let uriElem = document.getElementById('start-sygic-app-uri');
-        const backButtonUrl = 'back_button|com.geotab.androidCheckmate';
         uriElem.href = `${sygicAppBaseUri}${truckSettingsUrl}&&&${backButtonUrl}`;
       }
 
@@ -83,7 +83,7 @@ geotab.addin.sygic = function (api, state) {
         }
       }
 
-      window.open(`${sygicAppBaseUri}${truckSettingsUrl}`, '_system');
+      window.open(`${sygicAppBaseUri}${truckSettingsUrl}&&&${backButtonUrl}`, '_system');
 
       //show main content
       elAddin.className = elAddin.className.replace('hidden', '').trim();
