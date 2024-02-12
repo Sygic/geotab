@@ -399,31 +399,43 @@ export let Dimensions = {
   convertSpeedToMetric: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number / constants.mphInKph * rounding) / rounding;
+    else
+      return null;
   },
 
   convertWeightToMetric: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number / constants.poundsInKilos * rounding) / rounding;
+    else
+      return null;
   },
 
   convertDimensionToMetric: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number  / constants.feetInMilimeters * rounding) / rounding;
+    else
+      return null;
   },
 
   convertSpeedToImperial: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number * constants.mphInKph * rounding) / rounding;
+    else
+      return null;
   },
 
   convertWeightToImperial: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number * constants.poundsInKilos * rounding) / rounding;
+    else
+      return null;
   },
 
   convertDimensionToImperial: (number, rounding = 1e5) => {
     if (number)
       return Math.round(number * constants.feetInMilimeters * rounding) / rounding;
+    else
+      return null;
   },
 
   getInputValues: (parentElement) => {
