@@ -5,6 +5,19 @@
   "version": "1.0",
   "items": [
     {
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.4/mygeotab-sygic-page/dist/mygeotabSygicPage.html",
+      "path": "",
+      "menuName": {
+        "en": "Sygic Professional Navigation",
+        "de": "Professionelle Sygic Navigation",
+        "es": "Navegación profesional Sygic",
+        "fr": "Navigation professionnelle Sygic",
+        "it": "Navigazione Sygic Professional",
+        "pl": "Profesjonalna nawigacja Sygic"
+      },
+      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.4/mygeotab-sygic-page/dist/images/icon.svg"
+    },
+    {
       "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.4/geotabdrive-sygic-addin/dist/sygic.html",
       "path": "DriveAppLink/",
       "menuName": {
