@@ -464,8 +464,8 @@ geotab.addin.sygic = function (api, state) {
             let center = calculateCenter(pts);
 
             let lat = center[0];
-            let lng = center[1];
-            zonePoints.push({ lat, lng })
+            let lon = center[1];
+            zonePoints.push({ lat, lon })
 
             a.setAttribute('href', '#');
             a.addEventListener('click', async (event) => {
