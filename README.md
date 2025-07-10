@@ -41,6 +41,8 @@ npm run build
     3. tagged release config versions in [dist/1.2.3/start-sygic-config.json](dist/1.2.3/start-sygic-config.json) and [dist/1.2.3/truck-settings-config.json](dist/1.2.3/truck-settings-config.json)
 5. Push to github. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.2.3_).
 6. Files from step 4. point iii. should be used when installing addon to my.geotab.com. We recommend to use concrete version (e.g. _1.2.3_) configuration instead of relying on latest.
+7. Create new release version on Github
+8. Copy paste content of generated files `start-sygic-config.json` and `truck-settings-config.json` into Geotab->Settings->Add-Ins->Select desired add-in
 
 ## Geotab login credentials
 1. You need to have an account at the testing server https://my1291.geotab.com/
