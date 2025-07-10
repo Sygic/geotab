@@ -5,7 +5,7 @@
   "version": "1.0",
   "items": [
     {
-      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.4/mygeotab-sygic-page/dist/mygeotabSygicPage.html",
+      "url": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.5/mygeotab-sygic-page/dist/mygeotabSygicPage.html",
       "path": "",
       "menuName": {
         "en": "Sygic Professional Navigation",
@@ -15,7 +15,7 @@
         "it": "Navigazione Sygic Professional",
         "pl": "Profesjonalna nawigacja Sygic"
       },
-      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.4/mygeotab-sygic-page/dist/images/icon.svg"
+      "icon": "https://cdn.jsdelivr.net/gh/sygic/geotab@2.0.5/mygeotab-sygic-page/dist/images/icon.svg"
     }
   ],
   "isSigned": "false"
