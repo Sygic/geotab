@@ -249,8 +249,8 @@ geotab.addin.sygic = function (api, state) {
     //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
     let backUri = 'back_button|com.geotab.androidCheckmate';
-    let uri = `${baseUri}${truckUri}&&&${navigationUri}&&&${backUri}`;
-    return uri;
+    let uri = `${truckUri}&&&${navigationUri}&&&${backUri}`;
+    return `${baseUri}${encodeURI(uri)}`
   }
 
   async function createSygicTruckNavigateToItineraryUri(zonePoints) {
@@ -264,13 +264,14 @@ geotab.addin.sygic = function (api, state) {
     let routeImportUri = `routeimport|${waypointsPolyline}|gwp`;
     let backButtonUri = 'back_button|com.geotab.androidCheckmate';
 
-    let uri = `${baseUri}${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
+    let uri = `${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
+    let encodedUri = `${baseUri}${encodeURI(uri)}`
 
     if (window.DEBUG) {
-      console.log(uri);
+      console.log(encodedUri);
     }
 
-    return uri;
+    return encodedUri;
   }
 
   function resetView() {
@@ -464,13 +465,13 @@ geotab.addin.sygic = function (api, state) {
             let center = calculateCenter(pts);
 
             let lat = center[0];
-            let lon = center[1];
-            zonePoints.push({ lat, lon })
+            let lng = center[1];
+            zonePoints.push({ lat, lng })
 
             a.setAttribute('href', '#');
             a.addEventListener('click', async (event) => {
               event.preventDefault();
-              let location = await createSygicTruckNavigateToPointUri(lat, lon);
+              let location = await createSygicTruckNavigateToPointUri(lat, lng);
               window.open(location, '_system');
             });
           }
