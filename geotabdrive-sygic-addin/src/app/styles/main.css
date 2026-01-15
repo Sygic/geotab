@@ -27,6 +27,24 @@
     margin-top: 1em;
 }
 
+#sygic-my-trips .route-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+#sygic-my-trips .route-open-button {
+    margin-top: 0;
+    padding: 2px 8px;
+    font-size: 0.85em;
+    line-height: 1.2;
+}
+
+#sygic-my-trips .route-open-button--loading {
+    opacity: 0.6;
+}
+
 .sygic-warning-div {
     color: red;
     padding: 16px;
