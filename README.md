@@ -29,20 +29,48 @@ Try to apply this environment variable:
 Windows: `$env:NODE_OPTIONS="--openssl-legacy-provider yarn dev"`
 
 ## Deployment
-1. To increase solution _version_ go to [package.json](package.json) and increase the _version_ property. This version will be used in all addons in step 2.
-2. To build for production run following command in root folder. It will run respective build scripts for geotabdrive addins and mygeotab page.
-```
-npm run build
-```
-3. The _version_ from step 1 is updated in all addons' respective package.json files. [geotabdrive-sygic-addin/package.json](geotabdrive-sygic-addin/package.json), [mygeotab-sygic-page/package.json](mygeotab-sygic-page/package.json), [geotabdrive-start-sygic-addin/package.json](geotabdrive-start-sygic-addin/package.json)
-4. Build script from step 3 will create two files:
-    1. a combined config [dist/latest/truck-settings-config.json](dist/latest/truck-settings-config.json) for geotabdrive and mygeotab addins.
-    2. single config [dist/latest/start-sygic-config.json](dist/latest/start-sygic-config.json) for _Start Sygic Truck_ geotab drive button addin. 
-    3. tagged release config versions in [dist/1.2.3/start-sygic-config.json](dist/1.2.3/start-sygic-config.json) and [dist/1.2.3/truck-settings-config.json](dist/1.2.3/truck-settings-config.json)
-5. Push to github. [Create a release on github](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository) with specified version tag (e.g. _1.2.3_).
-6. Files from step 4. point iii. should be used when installing addon to my.geotab.com. We recommend to use concrete version (e.g. _1.2.3_) configuration instead of relying on latest.
-7. Create new release version on Github
-8. Copy paste content of generated files `start-sygic-config.json` and `truck-settings-config.json` into Geotab->Settings->Add-Ins->Select desired add-in
+
+### Automated Release (Recommended)
+
+The repository includes a GitHub Actions workflow that automates the entire release process:
+
+1. **Trigger the workflow**:
+   - Go to GitHub → **Actions** tab
+   - Select **Release** workflow
+   - Click **Run workflow**
+   - Enter the version number:
+     - For stable releases: `1.2.3`
+     - For prereleases: `2.0.6-beta`, `2.0.6-rc.1`, etc.
+   - Click **Run workflow**
+
+2. **What happens automatically**:
+   - Updates version in all package.json files
+   - Sets up and links sygic-geotab-utils
+   - Builds all addins for production
+   - Commits version updates and dist folders to repository
+   - Creates Git tag (e.g., `v1.2.3`)
+   - Creates GitHub release with config files
+   - Built files become available via jsDelivr CDN
+
+3. **Installing the addins**:
+   - Navigate to the [releases page](https://github.com/Sygic/geotab/releases)
+   - Open the desired release version
+   - Access config files from the `dist/` folder in the repository:
+     - For Truck Settings: `dist/1.2.3/truck-settings-config.json`
+     - For Start Sygic Button: `dist/1.2.3/start-sygic-config.json`
+   - Go to Geotab → Settings → Add-Ins → Select desired add-in
+   - Copy and paste the config content
+
+**Note:** We recommend using concrete version configurations (e.g., `1.2.3`) instead of relying on `latest`.
+
+### Manual Deployment (Alternative)
+
+If you need to build locally without using the automated workflow:
+
+1. Update the version in [package.json](package.json)
+2. Run `npm run build` in the root folder
+3. Manually commit and push changes
+4. Create a GitHub release manually
 
 ## Geotab login credentials
 1. You need to have an account at the testing server https://my1291.geotab.com/
