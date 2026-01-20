@@ -94,6 +94,19 @@ jobs:
           git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
           git push origin "v${{ github.event.inputs.version }}"
       
+      - name: Verify dist files exist
+        run: |
+          echo "Checking for dist files..."
+          ls -R dist/
+          if [ ! -f "dist/${{ github.event.inputs.version }}/truck-settings-config.json" ]; then
+            echo "Error: dist/${{ github.event.inputs.version }}/truck-settings-config.json not found"
+            exit 1
+          fi
+          if [ ! -f "dist/${{ github.event.inputs.version }}/start-sygic-config.json" ]; then
+            echo "Error: dist/${{ github.event.inputs.version }}/start-sygic-config.json not found"
+            exit 1
+          fi
+      
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
