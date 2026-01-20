@@ -1,0 +1,133 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., 1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Validate version format
+        run: |
+          if ! [[ "${{ github.event.inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: Version must be in format X.Y.Z"
+            exit 1
+          fi
+      
+      - name: Update version in root package.json
+        run: |
+          npm version ${{ github.event.inputs.version }} --no-git-tag-version
+      
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Setup sygic-geotab-utils
+        run: |
+          cd sygic-geotab-utils
+          npm install
+          npm run compile
+          npm link
+          cd ..
+      
+      - name: Link utils to mygeotab-sygic-page
+        run: |
+          cd mygeotab-sygic-page
+          npm install
+          npm link sygic-geotab-utils
+          cd ..
+      
+      - name: Link utils to geotabdrive-sygic-addin
+        run: |
+          cd geotabdrive-sygic-addin
+          npm install
+          npm link sygic-geotab-utils
+          cd ..
+      
+      - name: Link utils to geotabdrive-start-sygic-addin
+        run: |
+          cd geotabdrive-start-sygic-addin
+          npm install
+          npm link sygic-geotab-utils
+          cd ..
+      
+      - name: Build for production
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--openssl-legacy-provider"
+      
+      - name: Commit version updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json geotabdrive-sygic-addin/package.json mygeotab-sygic-page/package.json geotabdrive-start-sygic-addin/package.json
+          git commit -m "chore: bump version to ${{ github.event.inputs.version }}"
+          git push
+      
+      - name: Create Git tag
+        run: |
+          git tag -a "v${{ github.event.inputs.version }}" -m "Release v${{ github.event.inputs.version }}"
+          git push origin "v${{ github.event.inputs.version }}"
+      
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: Release v${{ github.event.inputs.version }}
+          draft: false
+          prerelease: false
+          body: |
+            ## Release v${{ github.event.inputs.version }}
+            
+            ### Installation Instructions
+            
+            #### For Truck Settings (MyGeotab Page + Geotab Drive Addin)
+            1. Go to Geotab → Settings → Add-Ins
+            2. Select the desired add-in
+            3. Copy the content from [truck-settings-config.json](https://github.com/${{ github.repository }}/releases/download/v${{ github.event.inputs.version }}/truck-settings-config.json)
+            4. Paste it into the configuration
+            
+            #### For Start Sygic Button (Geotab Drive)
+            1. Go to Geotab → Settings → Add-Ins
+            2. Select the Start Sygic Truck add-in
+            3. Copy the content from [start-sygic-config.json](https://github.com/${{ github.repository }}/releases/download/v${{ github.event.inputs.version }}/start-sygic-config.json)
+            4. Paste it into the configuration
+            
+            ### Files
+            - `truck-settings-config.json` - Combined config for MyGeotab and Geotab Drive addins
+            - `start-sygic-config.json` - Config for Start Sygic Truck button addin
+            
+            ---
+            **Note:** We recommend using concrete version configurations instead of relying on latest.
+          files: |
+            dist/${{ github.event.inputs.version }}/truck-settings-config.json
+            dist/${{ github.event.inputs.version }}/start-sygic-config.json
+            dist/latest/truck-settings-config.json
+            dist/latest/start-sygic-config.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Release Summary
+        run: |
+          echo "## Release v${{ github.event.inputs.version }} Created! 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Go to the [releases page](https://github.com/${{ github.repository }}/releases/tag/v${{ github.event.inputs.version }})" >> $GITHUB_STEP_SUMMARY
+          echo "2. Download the config files" >> $GITHUB_STEP_SUMMARY
+          echo "3. Install them in Geotab → Settings → Add-Ins" >> $GITHUB_STEP_SUMMARY
