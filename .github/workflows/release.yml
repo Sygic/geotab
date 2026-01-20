@@ -81,11 +81,13 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
       
-      - name: Commit version updates
+      - name: Commit version updates and dist files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add package.json geotabdrive-sygic-addin/package.json mygeotab-sygic-page/package.json geotabdrive-start-sygic-addin/package.json
+          git add dist/
+          git add geotabdrive-sygic-addin/dist/ geotabdrive-start-sygic-addin/dist/ mygeotab-sygic-page/dist/
           git commit -m "chore: bump version to ${{ github.event.inputs.version }}"
           git push
       
