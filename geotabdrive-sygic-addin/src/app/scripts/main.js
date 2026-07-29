@@ -60,12 +60,17 @@ geotab.addin.sygic = function (api, state) {
                               : c1 == 'D'
                                 ? me.getDate()
                                 : c1 == 'M' && str.length > 2
-                                  ? M[me.getMonth()].slice(0, str.length > 3 ? 9 : 3)
+                                  ? M[me.getMonth()].slice(
+                                    0,
+                                    str.length > 3 ? 9 : 3
+                                  )
                                   : c1 == 'm'
                                     ? me.getMinutes()
                                     : c1 == 'M'
                                       ? me.getMonth() + 1
-                                      : ('' + me.getFullYear()).slice(-str.length);
+                                      : ('' + me.getFullYear()).slice(
+                                        -str.length
+                                      );
           return c1 && str.length < 4 && ('' + ret).length < str.length
             ? ('00' + ret).slice(-str.length)
             : ret;
@@ -216,22 +221,36 @@ geotab.addin.sygic = function (api, state) {
       };
     }
 
-    let hazmatTemplateObject = Object.keys(viewModel.hazmat.value).map(key => ({
-      value: viewModel.hazmat.value[key].value,
-      key: key,
-      label: viewModel.hazmat.value[key].label,
-      visible:  viewModel.hazmat.value[key].visible,
-      options:  viewModel.hazmat.value[key].options,
-    }));
+    let hazmatTemplateObject = Object.keys(viewModel.hazmat.value).map(
+      key => ({
+        value: viewModel.hazmat.value[key].value,
+        key: key,
+        label: viewModel.hazmat.value[key].label,
+        visible: viewModel.hazmat.value[key].visible,
+        options: viewModel.hazmat.value[key].options,
+      })
+    );
 
-    document.getElementById('sygic-dimensions-summary-content').innerHTML =
-      summaryTemplate({dimensions: summaryDimensionsTemplateObject, hazmats: hazmatTemplateObject});
-    document.getElementById('sygic-dimensions-form-content').innerHTML =
-      formTemplate({dimensions: summaryDimensionsTemplateObject, hazmats: hazmatTemplateObject});
+    document.getElementById(
+      'sygic-dimensions-summary-content'
+    ).innerHTML = summaryTemplate({
+      dimensions: summaryDimensionsTemplateObject,
+      hazmats: hazmatTemplateObject
+    });
+
+    document.getElementById(
+      'sygic-dimensions-form-content'
+    ).innerHTML = formTemplate({
+      dimensions: summaryDimensionsTemplateObject,
+      hazmats: hazmatTemplateObject
+    });
   }
 
   function toggleDimensionsBox() {
-    document.getElementById('sygic-dimensions-form').classList.toggle('hidden');
+    document
+      .getElementById('sygic-dimensions-form')
+      .classList.toggle('hidden');
+
     document
       .getElementById('sygic-dimensions-summary')
       .classList.toggle('hidden');
@@ -243,29 +262,43 @@ geotab.addin.sygic = function (api, state) {
 
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
     let user = await getUser();
-    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+
+    const dimensions = DimensionsModel.getFromStringInputs(
+      dimensionsInputs,
+      user.isMetric
+    );
+
     let truckUri = createSygicTruckAttrUrl(dimensions);
+
     //docs: https://www.sygic.com/developers/professional-navigation-sdk/android/api-examples/custom-url
     //example: com.sygic.aura://coordinate|17.1224|48.1450|drive&&&truckSettings|wei=20000&axw=10000&len=14993&wid=2501&hei=3005&rou=tru
 
     let backUri = 'back_button|com.geotab.androidCheckmate';
     let uri = `${truckUri}&&&${navigationUri}&&&${backUri}`;
-    return `${baseUri}${encodeURI(uri)}`
+
+    return `${baseUri}${encodeURI(uri)}`;
   }
 
   async function createSygicTruckNavigateToItineraryUri(zonePoints) {
     let waypointsPolyline = PolyUtil.encode(zonePoints);
     let dimensionsInputs = Dimensions.getInputValues(elAddin);
     let user = await getUser();
-    const dimensions = DimensionsModel.getFromStringInputs(dimensionsInputs, user.isMetric);
+
+    const dimensions = DimensionsModel.getFromStringInputs(
+      dimensionsInputs,
+      user.isMetric
+    );
+
     const truckSettingsUri = createSygicTruckAttrUrl(dimensions);
 
     let baseUri = 'com.sygic.aura://';
     let routeImportUri = `routeimport|${waypointsPolyline}|gwp`;
     let backButtonUri = 'back_button|com.geotab.androidCheckmate';
 
-    let uri = `${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
-    let encodedUri = `${baseUri}${encodeURI(uri)}`
+    let uri =
+      `${truckSettingsUri}&&&${routeImportUri}&&&${backButtonUri}`;
+
+    let encodedUri = `${baseUri}${encodeURI(uri)}`;
 
     if (window.DEBUG) {
       console.log(encodedUri);
@@ -276,13 +309,14 @@ geotab.addin.sygic = function (api, state) {
 
   function resetView() {
     elAddin.querySelector('#sygic-vehicle').textContent = '-';
+
     show(document.getElementById('sygic-no-vehicle-warning'));
     hide(document.getElementById('sygic-dimensions-summary'));
     hide(document.getElementById('sygic-edit-dimensions'));
   }
 
   async function loadDevice(deviceId) {
-    if (deviceId){
+    if (deviceId) {
       let devices = await geotabApi.callAsync('Get', {
         typeName: 'Device',
         search: {
@@ -292,40 +326,50 @@ geotab.addin.sygic = function (api, state) {
 
       if (devices.length > 0) {
         let device = devices[0];
-        if (device.id){
-          elAddin.querySelector('#sygic-vehicle').textContent = device.name;
+
+        if (device.id) {
+          elAddin.querySelector('#sygic-vehicle').textContent =
+            device.name;
+
           show(document.getElementById('sygic-dimensions-summary'));
           hide(document.getElementById('sygic-no-vehicle-warning'));
+
           return device;
         }
       }
     }
+
     return null;
   }
 
   function formatStopDate(stopDateString) {
     let stopDate = new Date(stopDateString);
+
     return `${state.translate('at')} ${stopDate.format(
       'HH:mm'
     )} ${state.translate('on')} ${stopDate.format('DD.MM')}`;
   }
 
   async function loadTrips(deviceId) {
-
     function createElement(tag, options = {}, parent = null) {
       let el = document.createElement(tag);
-      (options.classes || []).forEach((c) => {
+
+      (options.classes || []).forEach(c => {
         el.classList.add(c);
       });
+
       if (options.content) {
         el.appendChild(document.createTextNode(options.content));
       }
+
       if (options.style) {
         el.style = options.style;
       }
+
       if (parent) {
         parent.appendChild(el);
       }
+
       return el;
     }
 
@@ -334,11 +378,81 @@ geotab.addin.sygic = function (api, state) {
       var y = arr.map(xy => xy[1]);
       var cx = (Math.min(...x) + Math.max(...x)) / 2;
       var cy = (Math.min(...y) + Math.max(...y)) / 2;
+
       return [cx, cy];
+    }
+
+    const zoneCache = new Map();
+    const routePointsCache = new Map();
+
+    async function getZoneById(zoneId) {
+      if (!zoneId) {
+        return null;
+      }
+
+      if (zoneCache.has(zoneId)) {
+        return zoneCache.get(zoneId);
+      }
+
+      let results = await geotabApi.callAsync('Get', {
+        typeName: 'Zone',
+        search: {
+          id: zoneId,
+        },
+      });
+
+      let zone = results && results[0] ? results[0] : null;
+
+      zoneCache.set(zoneId, zone);
+
+      return zone;
+    }
+
+    async function getRouteZonePoints(route) {
+      if (!route || !route.id) {
+        return [];
+      }
+
+      if (routePointsCache.has(route.id)) {
+        return routePointsCache.get(route.id);
+      }
+
+      let zonePoints = [];
+
+      for (
+        let index = 0;
+        index < route.routePlanItemCollection.length;
+        index++
+      ) {
+        const stop = route.routePlanItemCollection[index];
+
+        if (!stop.zone || !stop.zone.id) {
+          continue;
+        }
+
+        let zone = await getZoneById(stop.zone.id);
+
+        if (!zone || !zone.points || zone.points.length === 0) {
+          continue;
+        }
+
+        let pts = zone.points.map(p => [p.y, p.x]);
+        let center = calculateCenter(pts);
+
+        zonePoints.push({
+          lat: center[0],
+          lng: center[1]
+        });
+      }
+
+      routePointsCache.set(route.id, zonePoints);
+
+      return zonePoints;
     }
 
     let today = new Date();
     today.setHours(0, 0, 0, 0);
+
     let myRoutes = await geotabApi.callAsync('Get', {
       typeName: 'Route',
       search: {
@@ -353,13 +467,14 @@ geotab.addin.sygic = function (api, state) {
     let tripsContainer = elAddin.querySelector('#sygic-my-trips');
     tripsContainer.innerHTML = '';
 
-    myRoutes.forEach((route) => {
-
+    myRoutes.forEach(route => {
       //TODO: Route-Plan search not respecting fromDate parameter!
       if (route.startTime) {
         var routeStartTime = new Date(route.startTime);
-        if (routeStartTime < today)
+
+        if (routeStartTime < today) {
           return;
+        }
       }
 
       let routeListItem = createElement(
@@ -378,12 +493,20 @@ geotab.addin.sygic = function (api, state) {
         routeListItem
       );
 
+      let headerRow = createElement(
+        'div',
+        {
+          classes: ['route-header'],
+        },
+        container
+      );
+
       createElement(
         'div',
         {
           content: route.name,
         },
-        container
+        headerRow
       );
 
       let firstStop = route.routePlanItemCollection[0];
@@ -391,9 +514,11 @@ geotab.addin.sygic = function (api, state) {
       createElement(
         'div',
         {
-          content: `${route.routePlanItemCollection.length} ${route.routePlanItemCollection.length == 1
-            ? state.translate('stop')
-            : state.translate('stops')
+          content:
+            `${route.routePlanItemCollection.length} ${
+              route.routePlanItemCollection.length == 1
+                ? state.translate('stop')
+                : state.translate('stops')
             }, ${state.translate('first stop')} ${formatStopDate(
               firstStop.activeFrom
             )}`,
@@ -402,18 +527,68 @@ geotab.addin.sygic = function (api, state) {
         container
       );
 
+      const navigateWithSygic = async (event, button) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        button.setAttribute('disabled', 'disabled');
+        button.classList.add('route-open-button--loading');
+
+        try {
+          let zonePoints = await getRouteZonePoints(route);
+
+          let location =
+            await createSygicTruckNavigateToItineraryUri(zonePoints);
+
+          window.open(location, '_system');
+        } finally {
+          button.classList.remove('route-open-button--loading');
+          button.removeAttribute('disabled');
+        }
+      };
+
+      const createNavigateWithSygicButton = (
+        parent,
+        classes = []
+      ) => {
+        let button = createElement(
+          'button',
+          {
+            content: state.translate('Navigate with Sygic'),
+            classes: ['route-open-button', ...classes],
+          },
+          parent
+        );
+
+        button.setAttribute('type', 'button');
+
+        button.addEventListener('click', async event => {
+          await navigateWithSygic(event, button);
+        });
+
+        return button;
+      };
+
+      // Primary action below the route name and stop information.
+      createNavigateWithSygicButton(container);
+
       let tableHolder = createElement(
         'div',
         {
-          classes: ['hidden']
+          classes: ['hidden'],
         },
         container
-      )
+      );
 
-
-
-      routeListItem.addEventListener('click', async (event) => {
+      routeListItem.addEventListener('click', async event => {
         event.preventDefault();
+
+        if (!tableHolder.classList.contains('hidden')) {
+          tableHolder.innerHTML = '';
+          tableHolder.classList.add('hidden');
+
+          return;
+        }
 
         let table = createElement(
           'table',
@@ -423,84 +598,119 @@ geotab.addin.sygic = function (api, state) {
           tableHolder
         );
 
-        if (tableHolder.classList.contains('hidden')) {
-          let zonePoints = [];
-          for (
-            let index = 0;
-            index < route.routePlanItemCollection.length;
-            index++
-          ) {
-            const stop = route.routePlanItemCollection[index];
-            let results = await geotabApi.callAsync('Get', {
-              typeName: 'Zone',
-              search: {
-                id: stop.zone.id,
-              },
-            });
-            let zone = results[0];
-            let tr = createElement('tr', {}, table);
-            tr.addEventListener('click', (event) => {
-              event.preventDefault();
-              event.stopPropagation();
-            });
-            let td = createElement('td', {}, tr);
-            let a = createElement(
-              'a',
-              {
-                content: `${index + 1}. ${zone.name}`,
-              },
-              td
-            );
+        let zonePoints = [];
 
-            createElement(
-              'div',
-              {
-                content: `${formatStopDate(stop.activeFrom)}`,
-                classes: ['caption'],
-              },
-              td
-            );
+        for (
+          let index = 0;
+          index < route.routePlanItemCollection.length;
+          index++
+        ) {
+          const stop = route.routePlanItemCollection[index];
 
-            let pts = zone.points.map(p => [p.y, p.x]);
-            let center = calculateCenter(pts);
+          let zone = await getZoneById(
+            stop.zone && stop.zone.id
+          );
 
-            let lat = center[0];
-            let lng = center[1];
-            zonePoints.push({ lat, lng })
-
-            a.setAttribute('href', '#');
-            a.addEventListener('click', async (event) => {
-              event.preventDefault();
-              let location = await createSygicTruckNavigateToPointUri(lat, lng);
-              window.open(location, '_system');
-            });
+          if (!zone) {
+            continue;
           }
 
-          let itineraryOpenLink = createElement('button', {
-            content: state.translate('Open itinerary')
-          }, tableHolder);
-          itineraryOpenLink.setAttribute('href', '#');
-          itineraryOpenLink.addEventListener('click', async (event) => {
+          let tr = createElement('tr', {}, table);
+
+          tr.addEventListener('click', event => {
             event.preventDefault();
-            let location = await createSygicTruckNavigateToItineraryUri(zonePoints);
-            window.open(location, '_system');
+            event.stopPropagation();
           });
 
-        } else {
-          tableHolder.innerHTML = '';
+          let td = createElement('td', {}, tr);
+
+          let a = createElement(
+            'a',
+            {
+              content: `${index + 1}. ${zone.name}`,
+            },
+            td
+          );
+
+          createElement(
+            'div',
+            {
+              content: `${formatStopDate(stop.activeFrom)}`,
+              classes: ['caption'],
+            },
+            td
+          );
+
+          let pts = zone.points.map(p => [p.y, p.x]);
+          let center = calculateCenter(pts);
+
+          let lat = center[0];
+          let lng = center[1];
+
+          zonePoints.push({
+            lat,
+            lng
+          });
+
+          a.setAttribute('href', '#');
+
+          a.addEventListener('click', async event => {
+            event.preventDefault();
+
+            let location =
+              await createSygicTruckNavigateToPointUri(lat, lng);
+
+            window.open(location, '_system');
+          });
         }
-        tableHolder.classList.toggle('hidden');
+
+        routePointsCache.set(route.id, zonePoints);
+
+        // Secondary action is visible only when the itinerary extends
+        // below the current viewport and scrolling is required.
+        let bottomNavigateButton =
+          createNavigateWithSygicButton(
+            tableHolder,
+            ['hidden']
+          );
+
+        tableHolder.classList.remove('hidden');
+
+        requestAnimationFrame(() => {
+          let viewportHeight =
+            window.innerHeight ||
+            document.documentElement.clientHeight;
+
+          let itineraryRequiresScrolling =
+            tableHolder.getBoundingClientRect().bottom >
+            viewportHeight;
+
+          bottomNavigateButton.classList.toggle(
+            'hidden',
+            !itineraryRequiresScrolling
+          );
+        });
       });
     });
   }
 
   async function loadDimensions(deviceId, isMetric) {
     const storage = new DimensionsStorage(geotabApi);
-    const myDimensions = await storage.getDimensionsModelAsync(deviceId);
+
+    const myDimensions =
+      await storage.getDimensionsModelAsync(deviceId);
+
     if (!myDimensions) {
-      showDimensions(DimensionsModel.getEmptyViewModel(isMetric, state));
+      showDimensions(
+        DimensionsModel.getEmptyViewModel(isMetric, state)
+      );
     } else {
-      showDimensions(myDimensions.dimensions.getViewModelWithUnits(isMetric, state));
+      showDimensions(
+        myDimensions.dimensions.getViewModelWithUnits(
+          isMetric,
+          state
+        )
+      );
     }
 
     return myDimensions;
@@ -509,6 +719,7 @@ geotab.addin.sygic = function (api, state) {
   async function getUser() {
     if (!cachedUser) {
       const session = await geotabApi.getSessionAsync();
+
       const geotabUser = await geotabApi.callAsync('Get', {
         typeName: 'User',
         search: {
@@ -516,23 +727,38 @@ geotab.addin.sygic = function (api, state) {
         },
       });
 
-      const geotabClearances = await geotabApi.callAsync('Get', {
-        typeName: 'Group',
-        search: {
-          id: 'groupSecurityId',
-        },
-      });
-      cachedUser = new User(geotabUser[0], geotabClearances);
+      const geotabClearances = await geotabApi.callAsync(
+        'Get',
+        {
+          typeName: 'Group',
+          search: {
+            id: 'groupSecurityId',
+          },
+        }
+      );
+
+      cachedUser = new User(
+        geotabUser[0],
+        geotabClearances
+      );
     }
+
     return cachedUser;
   }
 
-
   async function saveDimensions(deviceId, isMetric) {
     const storage = new DimensionsStorage(geotabApi);
-    const dimensionsInputs = Dimensions.getInputValues(elAddin);
-    const myDimensions = await storage.getDimensionsModelAsync(deviceId);
-    const dimensionsModel = DimensionsModel.getFromStringInputs(dimensionsInputs, isMetric);
+    const dimensionsInputs =
+      Dimensions.getInputValues(elAddin);
+
+    const myDimensions =
+      await storage.getDimensionsModelAsync(deviceId);
+
+    const dimensionsModel =
+      DimensionsModel.getFromStringInputs(
+        dimensionsInputs,
+        isMetric
+      );
 
     if (myDimensions) {
       try {
@@ -550,6 +776,7 @@ geotab.addin.sygic = function (api, state) {
         deviceId
       );
     }
+
     await loadDimensions(deviceId, isMetric);
     toggleDimensionsBox();
   }
@@ -568,16 +795,20 @@ geotab.addin.sygic = function (api, state) {
 
   return {
     /**
-     * initialize() is called only once when the Add-In is first loaded. Use this function to initialize the
-     * Add-In's state such as default values or make API requests (MyGeotab or external) to ensure interface
-     * is ready for the user.
-     * @param {object} freshApi - The GeotabApi object for making calls to MyGeotab.
-     * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
-     * @param {function} initializeCallback - Call this when your initialize route is complete. Since your initialize routine
-     *        might be doing asynchronous operations, you must call this method when the Add-In is ready
-     *        for display to the user.
+     * initialize() is called only once when the Add-In is first loaded.
+     * Use this function to initialize the Add-In's state such as default
+     * values or make API requests (MyGeotab or external) to ensure
+     * interface is ready for the user.
+     *
+     * @param {object} freshApi
+     * @param {object} freshState
+     * @param {function} initializeCallback
      */
-    initialize: async function (freshApi, freshState, initializeCallback) {
+    initialize: async function (
+      freshApi,
+      freshState,
+      initializeCallback
+    ) {
       // Loading translations if available
       if (freshState.translate) {
         freshState.translate(elAddin || '');
@@ -591,7 +822,7 @@ geotab.addin.sygic = function (api, state) {
 
       document
         .getElementById('sygic-edit-dimensions')
-        .addEventListener('click', (event) => {
+        .addEventListener('click', event => {
           event.preventDefault();
           toggleDimensionsBox();
         });
@@ -600,14 +831,20 @@ geotab.addin.sygic = function (api, state) {
         .getElementById('sygic-save-dimensions')
         .addEventListener('click', async function (event) {
           event.preventDefault();
-          await saveDimensions(freshState.device.id, addonUser.isMetric);
+
+          await saveDimensions(
+            freshState.device.id,
+            addonUser.isMetric
+          );
         });
 
       document
         .getElementById('sygic-update-maps')
         .addEventListener('click', async function (event) {
           event.preventDefault();
+
           let location = 'com.sygic.aura://update|all';
+
           window.open(location, '_system');
         });
 
@@ -618,16 +855,10 @@ geotab.addin.sygic = function (api, state) {
     /**
      * focus() is called whenever the Add-In receives focus.
      *
-     * The first time the user clicks on the Add-In menu, initialize() will be called and when completed, focus().
-     * focus() will be called again when the Add-In is revisited. Note that focus() will also be called whenever
-     * the global state of the MyGeotab application changes, for example, if the user changes the global group
-     * filter in the UI.
-     *
-     * @param {object} freshApi - The GeotabApi object for making calls to MyGeotab.
-     * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
+     * @param {object} freshApi
+     * @param {object} freshState
      */
     focus: async function (freshApi, freshState) {
-
       if (window.DEBUG) {
         console.log('focus', arguments);
       }
@@ -635,15 +866,15 @@ geotab.addin.sygic = function (api, state) {
       resetView();
 
       let addonUser = await getUser();
-
       let deviceId = freshState.device.id;
+
       if (window.DEBUG) {
         window.sygic = {
           freshState,
           DimensionsStorage,
           geotabApi,
           addonUser
-        }
+        };
       }
 
       // addonUser.canViewPlans = false;
@@ -659,36 +890,54 @@ geotab.addin.sygic = function (api, state) {
       }
 
       if (addonUser.canModify) {
-        show(document.getElementById('sygic-edit-dimensions'));
+        show(
+          document.getElementById(
+            'sygic-edit-dimensions'
+          )
+        );
       }
 
       if (addonUser.canView) {
-        let dimensions = await loadDimensions(deviceId, addonUser.isMetric);
+        let dimensions = await loadDimensions(
+          deviceId,
+          addonUser.isMetric
+        );
+
         if (window.DEBUG) {
           window.sygic.dimensions = dimensions;
         }
       }
 
       if (addonUser.canViewPlans === false) {
-        show(document.getElementById('sygic-cannot-view-plans-warning'));
+        show(
+          document.getElementById(
+            'sygic-cannot-view-plans-warning'
+          )
+        );
       }
 
       if (addonUser.canView === false) {
-        show(document.getElementById('sygic-cannot-view-vehicles-warning'));
-        hide(document.getElementById('sygic-no-vehicle-warning'))
+        show(
+          document.getElementById(
+            'sygic-cannot-view-vehicles-warning'
+          )
+        );
+
+        hide(
+          document.getElementById(
+            'sygic-no-vehicle-warning'
+          )
+        );
       }
 
       //show main content
-      elAddin.className = elAddin.className.replace('hidden', '').trim();
+      elAddin.className =
+        elAddin.className.replace('hidden', '').trim();
     },
 
     /**
-     * blur() is called whenever the user navigates away from the Add-In.
-     *
-     * Use this function to save the page state or commit changes to a data store or release memory.
-     *
-     * @param {object} freshApi - The GeotabApi object for making calls to MyGeotab.
-     * @param {object} freshState - The page state object allows access to URL, page navigation and global group filter.
+     * blur() is called whenever the user navigates away
+     * from the Add-In.
      */
     blur: function () {
       // hide main content
